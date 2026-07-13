@@ -1,0 +1,59 @@
+{
+  "name": "@anil-labs/lightbox-gallery-react",
+  "version": "0.1.0",
+  "description": "React bindings for @anil-labs/lightbox-gallery-core — a modern lightbox gallery with zoom, swipe, thumbnails, slideshow and video support.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "echo \"covered by @anil-labs/lightbox-gallery-core\"",
+    "typecheck": "tsc --noEmit",
+    "prepack": "pnpm run build"
+  },
+  "keywords": [
+    "react",
+    "lightbox",
+    "gallery",
+    "image",
+    "zoom",
+    "carousel"
+  ],
+  "license": "MIT",
+  "author": "Er. Anil Kumar Thakur <anilkumarthakur60@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anilkumarthakur60/lightbox-gallery.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/anilkumarthakur60/lightbox-gallery/tree/main/packages/react#readme",
+  "bugs": "https://github.com/anilkumarthakur60/lightbox-gallery/issues",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@anil-labs/lightbox-gallery-core": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": ">=17"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "react": "^18.3.1",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  }
+}
