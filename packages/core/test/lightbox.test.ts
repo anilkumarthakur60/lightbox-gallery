@@ -236,6 +236,71 @@ describe('new features', () => {
   })
 })
 
+function firePointer(target: Element, type: string, opts: Record<string, unknown>): void {
+  const event = new Event(type, { bubbles: true, cancelable: true }) as Event &
+    Record<string, unknown>
+  Object.assign(event, { pointerId: 1, button: 0, ...opts })
+  target.dispatchEvent(event)
+}
+
+function tap(target: Element, pointerType: string, x = 50, y = 50): void {
+  firePointer(target, 'pointerdown', { pointerType, clientX: x, clientY: y })
+  firePointer(target, 'pointerup', { pointerType, clientX: x, clientY: y })
+}
+
+describe('tap handling', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    document.body.innerHTML = ''
+    document.body.style.overflow = ''
+    vi.useRealTimers()
+  })
+
+  it('touch tap on the image toggles the UI instead of closing', () => {
+    const lb = new Lightbox({ items, loop: false })
+    lb.open(0)
+    const img = document.querySelector('img.lbg-image')!
+    tap(img, 'touch')
+    vi.advanceTimersByTime(400)
+    expect(lb.isOpen).toBe(true)
+    expect(document.querySelector('.lbg-root')?.classList.contains('lbg-ui-hidden')).toBe(true)
+    tap(img, 'touch')
+    vi.advanceTimersByTime(400)
+    expect(document.querySelector('.lbg-root')?.classList.contains('lbg-ui-hidden')).toBe(false)
+    lb.destroy()
+  })
+
+  it('mouse click on the image zooms in, second click zooms back out', () => {
+    const lb = new Lightbox({ items, loop: false })
+    lb.open(0)
+    const img = document.querySelector<HTMLImageElement>('img.lbg-image')!
+    tap(img, 'mouse')
+    vi.advanceTimersByTime(400)
+    expect(lb.isOpen).toBe(true)
+    expect(lb.scale).toBe(2.5)
+    expect(img.style.transform).toContain('scale(2.5)')
+    // wait out the double-tap window, then click again to reset
+    vi.advanceTimersByTime(400)
+    tap(img, 'mouse')
+    vi.advanceTimersByTime(400)
+    expect(lb.scale).toBe(1)
+    lb.destroy()
+  })
+
+  it('tap on the backdrop closes the gallery', () => {
+    const lb = new Lightbox({ items, loop: false })
+    lb.open(0)
+    const inner = document.querySelectorAll('.lbg-slide-inner')[0]!
+    tap(inner, 'touch')
+    vi.advanceTimersByTime(400)
+    expect(lb.isOpen).toBe(false)
+    lb.destroy()
+  })
+})
+
 describe('helpers', () => {
   it('detects media types from URLs', () => {
     expect(detectType({ src: 'photo.jpeg' })).toBe('image')

@@ -87,7 +87,9 @@ const DOUBLE_TAP_PX = 40
 const PINCH_MIN_SCALE = 0.4
 const PINCH_CLOSE_SCALE = 0.75
 
-type Gesture = 'idle' | 'pending' | 'swipe' | 'pan' | 'vclose' | 'pinch'
+// 'none' = movement consumed but intentionally ignored (e.g. a sloppy mouse
+// click that drifted past the tap threshold) — must not become a tap on release
+type Gesture = 'idle' | 'pending' | 'swipe' | 'pan' | 'vclose' | 'pinch' | 'none'
 
 interface TracePoint {
   x: number
@@ -155,6 +157,9 @@ export class Lightbox extends Emitter<LightboxEventMap> {
   private gesture: Gesture = 'idle'
   private start = { x: 0, y: 0, tx: 0, ty: 0, scale: 1, dist: 0, midX: 0, midY: 0 }
   private trace: TracePoint[] = []
+  // original pointerdown target — pointerup retargets to the stage once
+  // setPointerCapture is active, so it cannot be used for hit-testing
+  private downTarget: HTMLElement | null = null
   private lastTap = { t: 0, x: 0, y: 0 }
   private tapTimer: ReturnType<typeof setTimeout> | null = null
   private momentumRaf: number | null = null
@@ -602,6 +607,7 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     this.toastEl = null
     this.slides = []
     this.pointers.clear()
+    this.downTarget = null
     this.gesture = 'idle'
     this.navigating = false
     this.uiHidden = false
@@ -1309,6 +1315,7 @@ export class Lightbox extends Emitter<LightboxEventMap> {
 
     if (this.pointers.size === 1) {
       this.gesture = 'pending'
+      this.downTarget = target
       this.start = {
         x: e.clientX,
         y: e.clientY,
@@ -1353,19 +1360,25 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     this.trace.push({ x: e.clientX, y: e.clientY, t: Date.now() })
     if (this.trace.length > 6) this.trace.shift()
 
+    if (this.gesture === 'none') return
+
     if (this.gesture === 'pending') {
       if (Math.hypot(dx, dy) < SWIPE_START_PX) return
+      const touchLike = e.pointerType !== 'mouse'
       if (this.scaleValue > 1) {
         this.gesture = 'pan'
       } else if (Math.abs(dx) >= Math.abs(dy) && this.options.swipe) {
         this.gesture = 'swipe'
         this.stopSlideshow()
-      } else if (this.options.swipeToClose && !this.inline) {
+      } else if (touchLike && this.options.swipeToClose && !this.inline) {
+        // drag-to-close is touch/pen only: with a mouse, a slightly sloppy
+        // click must never be interpreted as a close gesture
         this.gesture = 'vclose'
-      } else if (this.options.swipe) {
+      } else if (touchLike && this.options.swipe) {
         this.gesture = 'swipe'
         this.stopSlideshow()
       } else {
+        this.gesture = 'none'
         return
       }
     }
@@ -1419,7 +1432,10 @@ export class Lightbox extends Emitter<LightboxEventMap> {
       const rect = this.stage.getBoundingClientRect()
       const threshold = Math.min(rect.width * 0.22, 140)
       const dir: 1 | -1 = dx < 0 ? 1 : -1
-      if ((Math.abs(dx) > threshold || Math.abs(vx) > 0.45) && this.canGo(dir)) {
+      // a flick counts only with real displacement behind it — raw velocity
+      // alone can spike on a few-pixel jitter
+      const flick = Math.abs(vx) > 0.45 && Math.abs(dx) > 30
+      if ((Math.abs(dx) > threshold || flick) && this.canGo(dir)) {
         this.navigate(dir)
       } else {
         this.setTrackOffset(0, true)
@@ -1429,7 +1445,8 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     } else if (gesture === 'pan') {
       this.startMomentum(vx, vy)
     } else if (gesture === 'vclose') {
-      if (Math.abs(dy) > 110 || Math.abs(vy) > 0.5) {
+      const flick = Math.abs(vy) > 0.5 && Math.abs(dy) > 40
+      if (Math.abs(dy) > 110 || flick) {
         this.close()
       } else {
         const slide = this.slides[1]
@@ -1506,14 +1523,24 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     }
 
     this.lastTap = { t: now, x: e.clientX, y: e.clientY }
-    const target = e.target as HTMLElement
-    const onContent = !!target.closest('.lbg-content')
+    const onContent = !!this.downTarget?.closest('.lbg-content')
     const zoomable = this.options.zoom && this.currentIsImage
+    const point = { x: e.clientX, y: e.clientY }
+    const pointerType = e.pointerType
     this.tapTimer = setTimeout(
       () => {
         this.tapTimer = null
-        if (onContent) this.toggleUIVisibility()
-        else if (this.options.closeOnBackdrop && !this.inline) this.close()
+        if (onContent) {
+          if (pointerType === 'mouse' && zoomable) {
+            // match the zoom-in cursor: click zooms, click again zooms back out
+            if (this.scaleValue > 1) this.zoomAtPoint(1, null, true)
+            else this.zoomAtPoint(this.options.doubleTapZoom, point, true)
+          } else {
+            this.toggleUIVisibility()
+          }
+        } else if (this.options.closeOnBackdrop && !this.inline) {
+          this.close()
+        }
       },
       zoomable ? DOUBLE_TAP_MS : 0,
     )

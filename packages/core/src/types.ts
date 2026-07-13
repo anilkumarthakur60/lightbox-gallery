@@ -81,7 +81,7 @@ export interface LightboxOptions {
   wheelZoom?: boolean
   /** Navigate with horizontal swipe / drag. @default true */
   swipe?: boolean
-  /** Swipe down (or up) to close. @default true */
+  /** Swipe down (or up) to close — touch/pen input only. @default true */
   swipeToClose?: boolean
   /** Pinch inward below 1x to close (touch). @default true */
   pinchToClose?: boolean
