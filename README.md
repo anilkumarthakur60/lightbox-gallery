@@ -54,8 +54,10 @@ bindGallery('a[data-gallery]', { loop: true })
 ### React
 
 ```bash
-pnpm add @lightbox-gallery/react
+pnpm add @lightbox-gallery/react @lightbox-gallery/core
 ```
+
+(`core` is needed as a direct dependency so you can import its stylesheet.)
 
 ```tsx
 import { Lightbox, useLightbox } from '@lightbox-gallery/react'
@@ -81,7 +83,7 @@ Or fully controlled: `<Lightbox items={items} open={open} index={index} onClose=
 ### Vue 3
 
 ```bash
-pnpm add @lightbox-gallery/vue
+pnpm add @lightbox-gallery/vue @lightbox-gallery/core
 ```
 
 ```vue

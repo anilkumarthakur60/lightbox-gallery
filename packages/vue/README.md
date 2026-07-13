@@ -3,7 +3,7 @@
 Vue 3 bindings for [`@lightbox-gallery/core`](https://www.npmjs.com/package/@lightbox-gallery/core) — a modern lightbox gallery with zoom, swipe, thumbnails, slideshow, fullscreen and video support.
 
 ```bash
-pnpm add @lightbox-gallery/vue
+pnpm add @lightbox-gallery/vue @lightbox-gallery/core
 ```
 
 ```vue

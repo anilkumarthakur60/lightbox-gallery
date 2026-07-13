@@ -10,6 +10,9 @@ importers:
 
   examples/react:
     dependencies:
+      '@lightbox-gallery/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@lightbox-gallery/react':
         specifier: workspace:*
         version: link:../../packages/react
@@ -51,6 +54,9 @@ importers:
 
   examples/vue:
     dependencies:
+      '@lightbox-gallery/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@lightbox-gallery/vue':
         specifier: workspace:*
         version: link:../../packages/vue
