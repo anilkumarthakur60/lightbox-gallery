@@ -1,0 +1,50 @@
+{
+  "name": "@lightbox-gallery/vue",
+  "version": "0.1.0",
+  "description": "Vue 3 bindings for @lightbox-gallery/core — a modern lightbox gallery with zoom, swipe, thumbnails, slideshow and video support.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "echo \"covered by @lightbox-gallery/core\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "lightbox",
+    "gallery",
+    "image",
+    "zoom",
+    "carousel"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@lightbox-gallery/core": "workspace:^"
+  },
+  "peerDependencies": {
+    "vue": "^3.3.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vue": "^3.5.13"
+  }
+}

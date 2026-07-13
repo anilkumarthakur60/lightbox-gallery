@@ -76,7 +76,7 @@ export interface LightboxOptions {
   container?: HTMLElement
 }
 
-export interface LightboxEventMap {
+export type LightboxEventMap = {
   open: [index: number]
   close: []
   change: [index: number, item: LightboxItem]
