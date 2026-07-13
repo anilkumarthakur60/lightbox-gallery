@@ -41,6 +41,63 @@
   background: var(--lbg-bg);
 }
 
+/* --------------------------------------------------------- inline mode */
+
+.lbg-inline-host {
+  position: relative;
+  overflow: hidden;
+}
+
+.lbg-root.lbg-inline {
+  position: absolute;
+  --lbg-z: 1;
+}
+
+/* ------------------------------------------------------------ progress */
+
+.lbg-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 2;
+  display: none;
+  pointer-events: none;
+}
+
+.lbg-root.lbg-playing .lbg-progress {
+  display: block;
+}
+
+.lbg-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--lbg-accent);
+}
+
+/* --------------------------------------------------------------- toast */
+
+.lbg-toast {
+  position: absolute;
+  top: 68px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  background: rgba(0, 0, 0, 0.78);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.lbg-toast.lbg-toast-show {
+  opacity: 1;
+}
+
 /* ------------------------------------------------------------- stage */
 
 .lbg-stage {
@@ -370,6 +427,65 @@ a.lbg-btn {
 
 .lbg-hidden {
   display: none !important;
+}
+
+/* ----------------------------------------------------------------- RTL */
+
+.lbg-rtl .lbg-nav-prev {
+  left: auto;
+  right: 12px;
+}
+
+.lbg-rtl .lbg-nav-next {
+  right: auto;
+  left: 12px;
+}
+
+.lbg-rtl .lbg-nav svg {
+  transform: scaleX(-1);
+}
+
+.lbg-rtl .lbg-toolbar {
+  direction: rtl;
+}
+
+/* ---------------------------------------------------------- theme presets */
+
+.lbg-theme-light {
+  --lbg-bg: rgba(248, 248, 250, 0.96);
+  --lbg-fg: #17171c;
+  --lbg-muted: rgba(0, 0, 0, 0.55);
+  --lbg-accent: #2f6fed;
+  --lbg-btn-bg: rgba(0, 0, 0, 0.06);
+  --lbg-btn-bg-hover: rgba(0, 0, 0, 0.14);
+}
+
+.lbg-theme-light .lbg-toast {
+  background: rgba(20, 20, 26, 0.85);
+}
+
+.lbg-theme-light .lbg-toolbar {
+  background: linear-gradient(rgba(255, 255, 255, 0.5), transparent);
+}
+
+.lbg-theme-glass {
+  --lbg-bg: rgba(16, 16, 24, 0.55);
+  --lbg-btn-bg: rgba(255, 255, 255, 0.12);
+  --lbg-btn-bg-hover: rgba(255, 255, 255, 0.24);
+}
+
+.lbg-theme-glass .lbg-backdrop {
+  backdrop-filter: blur(18px) saturate(1.3);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+}
+
+.lbg-theme-minimal {
+  --lbg-btn-bg: transparent;
+  --lbg-btn-bg-hover: rgba(255, 255, 255, 0.12);
+}
+
+.lbg-theme-minimal .lbg-toolbar {
+  background: none;
 }
 
 /* small screens */

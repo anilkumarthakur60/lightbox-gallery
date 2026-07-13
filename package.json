@@ -10,7 +10,13 @@
     "typecheck": "pnpm --filter \"./packages/*\" -r typecheck",
     "example:vanilla": "pnpm --filter example-vanilla dev",
     "example:react": "pnpm --filter example-react dev",
-    "example:vue": "pnpm --filter example-vue dev"
+    "example:vue": "pnpm --filter example-vue dev",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm build && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.10"
   },
   "engines": {
     "node": ">=18"

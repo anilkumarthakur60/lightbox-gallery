@@ -3,7 +3,8 @@ import { copyFile } from 'node:fs/promises'
 
 export default defineConfig({
   entry: ['src/index.ts'],
-  format: ['esm', 'cjs'],
+  format: ['esm', 'cjs', 'iife'],
+  globalName: 'LightboxGallery',
   dts: true,
   sourcemap: true,
   clean: true,

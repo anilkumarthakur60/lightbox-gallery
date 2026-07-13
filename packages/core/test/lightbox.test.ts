@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { Lightbox, detectType, toEmbedUrl } from '../src'
+import { Lightbox, detectType, toEmbedUrl, registerEmbedProvider } from '../src'
 
 const items = [
   { src: 'https://example.com/a.jpg', caption: 'First' },
@@ -130,13 +130,132 @@ describe('Lightbox', () => {
   })
 })
 
+describe('new features', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    document.body.innerHTML = ''
+    document.body.style.overflow = ''
+    vi.useRealTimers()
+  })
+
+  it('shows rotate buttons and rotates the image', () => {
+    const lb = new Lightbox({ items, rotate: true, loop: false })
+    const onRotate = vi.fn()
+    lb.on('rotate', onRotate)
+    lb.open(0)
+    const btn = document.querySelector<HTMLButtonElement>('.lbg-rotate-right')
+    expect(btn?.classList.contains('lbg-hidden')).toBe(false)
+    btn!.click()
+    expect(onRotate).toHaveBeenCalledWith(90)
+    const img = document.querySelector<HTMLImageElement>('img.lbg-image')
+    expect(img?.style.transform).toContain('rotate(90deg)')
+    lb.flipHorizontal()
+    expect(img?.style.transform).toContain('scale(-1, 1)')
+    lb.destroy()
+  })
+
+  it('share falls back to clipboard and emits share', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'clipboard', {
+      value: { writeText },
+      configurable: true,
+    })
+    const lb = new Lightbox({ items, share: true })
+    const onShare = vi.fn()
+    lb.on('share', onShare)
+    lb.open(0)
+    await lb.share()
+    expect(onShare).toHaveBeenCalledWith(items[0], 0)
+    expect(writeText).toHaveBeenCalledWith('https://example.com/a.jpg')
+    expect(document.querySelector('.lbg-toast')?.textContent).toBe('Link copied')
+    lb.destroy()
+  })
+
+  it('hash routing writes and updates the URL hash', () => {
+    const lb = new Lightbox({ items, hash: true })
+    lb.open(0)
+    expect(location.hash).toBe('#gallery=1')
+    lb.next()
+    vi.advanceTimersByTime(400)
+    expect(location.hash).toBe('#gallery=2')
+    expect(Lightbox.parseHash()).toBe(1)
+    lb.destroy()
+    history.replaceState(null, '', '#')
+  })
+
+  it('inline mode renders into the container without locking scroll', () => {
+    const container = document.createElement('div')
+    document.body.appendChild(container)
+    const lb = new Lightbox({ items, inline: true, container })
+    lb.open(0)
+    expect(container.querySelector('.lbg-root.lbg-inline')).not.toBeNull()
+    expect(document.body.style.overflow).toBe('')
+    expect(container.querySelector('.lbg-close')?.classList.contains('lbg-hidden')).toBe(true)
+    lb.destroy()
+  })
+
+  it('emits end-reached near the end and supports appendItems', () => {
+    const lb = new Lightbox({ items, loop: false, startIndex: 0 })
+    const onEnd = vi.fn()
+    lb.on('end-reached', onEnd)
+    lb.open(0)
+    expect(onEnd).not.toHaveBeenCalled()
+    lb.next()
+    vi.advanceTimersByTime(400)
+    expect(onEnd).toHaveBeenCalledTimes(1)
+    lb.appendItems([{ src: 'https://example.com/d.jpg' }])
+    expect(document.querySelector('.lbg-counter')?.textContent).toBe('2 / 4')
+    lb.next()
+    vi.advanceTimersByTime(400)
+    expect(onEnd).toHaveBeenCalledTimes(2)
+    lb.destroy()
+  })
+
+  it('uses custom labels', () => {
+    const lb = new Lightbox({ items, labels: { close: 'Schließen' } })
+    lb.open(0)
+    expect(document.querySelector('.lbg-close')?.getAttribute('aria-label')).toBe('Schließen')
+    lb.destroy()
+  })
+
+  it('renders custom toolbar buttons', () => {
+    const onClick = vi.fn()
+    const lb = new Lightbox({
+      items,
+      toolbarButtons: [{ id: 'like', label: 'Like', icon: '<svg></svg>', onClick }],
+    })
+    lb.open(0)
+    const btn = document.querySelector<HTMLButtonElement>('.lbg-btn-like')
+    expect(btn).not.toBeNull()
+    btn!.click()
+    expect(onClick).toHaveBeenCalledWith(lb)
+    lb.destroy()
+  })
+})
+
 describe('helpers', () => {
   it('detects media types from URLs', () => {
     expect(detectType({ src: 'photo.jpeg' })).toBe('image')
     expect(detectType({ src: 'clip.mp4' })).toBe('video')
     expect(detectType({ src: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' })).toBe('iframe')
     expect(detectType({ src: 'https://vimeo.com/123456' })).toBe('iframe')
+    expect(detectType({ src: 'https://home.wistia.com/medias/e4a27b971d' })).toBe('iframe')
     expect(detectType({ src: 'unknown', type: 'html', html: '<p>hi</p>' })).toBe('html')
+  })
+
+  it('supports custom embed providers', () => {
+    registerEmbedProvider({
+      name: 'loom',
+      match: /loom\.com\/share\/(\w+)/,
+      embed: (m) => `https://www.loom.com/embed/${m[1]}`,
+    })
+    expect(detectType({ src: 'https://www.loom.com/share/abc123' })).toBe('iframe')
+    expect(toEmbedUrl('https://www.loom.com/share/abc123')).toBe(
+      'https://www.loom.com/embed/abc123',
+    )
   })
 
   it('converts YouTube and Vimeo URLs to embeds', () => {

@@ -2,11 +2,48 @@ import { Emitter } from './events'
 import { el, button } from './dom'
 import { icons } from './icons'
 import { clamp, detectType, getFocusable, toEmbedUrl } from './utils'
-import type { LightboxEventMap, LightboxItem, LightboxOptions } from './types'
+import type {
+  LightboxEventMap,
+  LightboxItem,
+  LightboxLabels,
+  LightboxOptions,
+  LightboxToolbarButton,
+} from './types'
 
-type ResolvedOptions = Required<Omit<LightboxOptions, 'container' | 'className'>> & {
+type ResolvedOptions = Required<
+  Omit<
+    LightboxOptions,
+    'container' | 'className' | 'animateFrom' | 'labels' | 'toolbarButtons' | 'rtl'
+  >
+> & {
   container?: HTMLElement
   className: string
+  animateFrom?: (index: number) => HTMLElement | null | undefined
+  labels?: Partial<LightboxLabels>
+  toolbarButtons?: LightboxToolbarButton[]
+  rtl?: boolean
+}
+
+export const DEFAULT_LABELS: LightboxLabels = {
+  dialog: 'Media gallery',
+  close: 'Close gallery',
+  previous: 'Previous slide',
+  next: 'Next slide',
+  zoomIn: 'Zoom in',
+  zoomOut: 'Zoom out',
+  fullscreen: 'Toggle fullscreen',
+  slideshowStart: 'Start slideshow',
+  slideshowPause: 'Pause slideshow',
+  download: 'Download',
+  share: 'Share',
+  rotateLeft: 'Rotate left',
+  rotateRight: 'Rotate right',
+  flipHorizontal: 'Flip horizontal',
+  flipVertical: 'Flip vertical',
+  thumbnails: 'Thumbnails',
+  slide: 'Slide',
+  error: 'Could not load this media',
+  linkCopied: 'Link copied',
 }
 
 const DEFAULTS = {
@@ -18,6 +55,8 @@ const DEFAULTS = {
   wheelZoom: true,
   swipe: true,
   swipeToClose: true,
+  pinchToClose: true,
+  momentum: true,
   keyboard: true,
   counter: true,
   captions: true,
@@ -26,7 +65,13 @@ const DEFAULTS = {
   fullscreen: true,
   slideshow: true,
   slideshowDelay: 4000,
+  slideshowProgress: true,
+  slideshowPauseOnHover: true,
   download: false,
+  share: false,
+  rotate: false,
+  hash: false as boolean | string,
+  inline: false,
   closeOnBackdrop: true,
   preload: 2,
   animation: 'zoom' as const,
@@ -36,8 +81,11 @@ const DEFAULTS = {
 const SWIPE_START_PX = 8
 const NAV_MS = 320
 const CLOSE_MS = 280
+const FLIP_MS = 320
 const DOUBLE_TAP_MS = 320
 const DOUBLE_TAP_PX = 40
+const PINCH_MIN_SCALE = 0.4
+const PINCH_CLOSE_SCALE = 0.75
 
 type Gesture = 'idle' | 'pending' | 'swipe' | 'pan' | 'vclose' | 'pinch'
 
@@ -48,20 +96,32 @@ interface TracePoint {
 }
 
 export class Lightbox extends Emitter<LightboxEventMap> {
-  static readonly version = '0.1.0'
+  static readonly version = '0.2.0'
+
+  /** Parse a slide index from the current URL hash (`#gallery=3` → 2). */
+  static parseHash(key = 'gallery'): number | null {
+    if (typeof location === 'undefined') return null
+    const match = location.hash.match(new RegExp(`[#&]${key}=(\\d+)`))
+    return match ? Math.max(0, parseInt(match[1], 10) - 1) : null
+  }
 
   private options: ResolvedOptions
+  private labels: LightboxLabels
   private items: LightboxItem[]
 
   private _index = 0
   private _isOpen = false
   private navigating = false
   private uiHidden = false
+  private rtlActive = false
 
-  // zoom / pan state of the current slide (images only)
+  // zoom / pan / rotate state of the current slide (images only)
   private scaleValue = 1
   private tx = 0
   private ty = 0
+  private rotation = 0
+  private flippedX = false
+  private flippedY = false
   private baseW = 0
   private baseH = 0
 
@@ -74,11 +134,18 @@ export class Lightbox extends Emitter<LightboxEventMap> {
   private counterEl!: HTMLElement
   private captionEl!: HTMLElement
   private thumbsEl!: HTMLElement
+  private progressFill: HTMLElement | null = null
+  private toastEl: HTMLElement | null = null
   private prevBtn!: HTMLButtonElement
   private nextBtn!: HTMLButtonElement
   private closeBtn!: HTMLButtonElement
   private zoomInBtn!: HTMLButtonElement
   private zoomOutBtn!: HTMLButtonElement
+  private rotateLeftBtn!: HTMLButtonElement
+  private rotateRightBtn!: HTMLButtonElement
+  private flipHBtn!: HTMLButtonElement
+  private flipVBtn!: HTMLButtonElement
+  private shareBtn!: HTMLButtonElement
   private slideshowBtn!: HTMLButtonElement
   private fullscreenBtn!: HTMLButtonElement
   private downloadLink!: HTMLAnchorElement
@@ -90,24 +157,49 @@ export class Lightbox extends Emitter<LightboxEventMap> {
   private trace: TracePoint[] = []
   private lastTap = { t: 0, x: 0, y: 0 }
   private tapTimer: ReturnType<typeof setTimeout> | null = null
+  private momentumRaf: number | null = null
 
-  private slideshowTimer: ReturnType<typeof setInterval> | null = null
+  // slideshow
+  private playing = false
+  private suspended = false
+  private advanceTimer: ReturnType<typeof setTimeout> | null = null
+  private videoEndedCleanup: (() => void) | null = null
+
+  // hash routing
+  private pushedHash = false
+  private ignoreNextPop = false
+
   private closeTimer: ReturnType<typeof setTimeout> | null = null
   private navTimer: ReturnType<typeof setTimeout> | null = null
+  private toastTimer: ReturnType<typeof setTimeout> | null = null
+
+  private endNotifiedLength = -1
 
   private previousFocus: HTMLElement | null = null
   private bodyOverflow = ''
   private bodyPaddingRight = ''
+  private keyTarget: HTMLElement | Document | null = null
 
-  private onKeyDown = (e: KeyboardEvent): void => this.handleKey(e)
+  private onKeyDown = (e: Event): void => this.handleKey(e as KeyboardEvent)
   private onResize = (): void => this.handleResize()
   private onFullscreenChange = (): void => this.handleFullscreenChange()
+  private onPopState = (): void => {
+    if (this.ignoreNextPop) {
+      this.ignoreNextPop = false
+      return
+    }
+    if (this._isOpen) {
+      this.pushedHash = false
+      this.close()
+    }
+  }
 
   constructor(options: LightboxOptions) {
     super()
     const { items, ...rest } = options
     this.items = items.slice()
     this.options = { ...DEFAULTS, items: this.items, ...rest } as ResolvedOptions
+    this.labels = { ...DEFAULT_LABELS, ...this.options.labels }
   }
 
   // ---------------------------------------------------------------- getters
@@ -128,12 +220,20 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     return this.scaleValue
   }
 
+  get rotationDegrees(): number {
+    return this.rotation
+  }
+
   get currentItem(): LightboxItem | undefined {
     return this.items[this._index]
   }
 
   get isSlideshowRunning(): boolean {
-    return this.slideshowTimer !== null
+    return this.playing
+  }
+
+  private get inline(): boolean {
+    return !!(this.options.inline && this.options.container)
   }
 
   // ------------------------------------------------------------- public API
@@ -148,17 +248,24 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     }
     this._index = clamp(index ?? this.options.startIndex, 0, this.items.length - 1)
     this._isOpen = true
-    this.previousFocus = (document.activeElement as HTMLElement) ?? null
-    this.lockScroll()
+    this.rtlActive = this.options.rtl ?? document.documentElement.dir === 'rtl'
+    if (!this.inline) {
+      this.previousFocus = (document.activeElement as HTMLElement) ?? null
+      this.lockScroll()
+    }
     this.buildDOM()
-    this.renderSlides(true)
+    const flipSource = this.flipSourceFor(this._index)
+    this.renderSlides(!flipSource)
     this.renderThumbnails()
     this.updateUI()
-    document.addEventListener('keydown', this.onKeyDown)
+    this.keyTarget = this.inline ? this.root : document
+    this.keyTarget?.addEventListener('keydown', this.onKeyDown)
     window.addEventListener('resize', this.onResize)
     document.addEventListener('fullscreenchange', this.onFullscreenChange)
+    this.setupHash()
     requestAnimationFrame(() => this.root?.classList.add('lbg-open'))
-    this.closeBtn.focus({ preventScroll: true })
+    if (flipSource) this.runOpenFlip(flipSource)
+    if (!this.inline) this.closeBtn.focus({ preventScroll: true })
     this.emit('open', this._index)
     this.preloadNeighbours()
   }
@@ -167,10 +274,17 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     if (!this._isOpen || !this.root) return
     this._isOpen = false
     this.stopSlideshow()
+    this.stopMomentum()
     if (document.fullscreenElement === this.root) {
       document.exitFullscreen?.().catch(() => {})
     }
+    if (this.pushedHash) {
+      this.pushedHash = false
+      this.ignoreNextPop = true
+      history.back()
+    }
     this.emit('close')
+    this.runCloseFlip()
     this.root.classList.add('lbg-closing')
     this.closeTimer = setTimeout(() => {
       this.closeTimer = null
@@ -186,6 +300,11 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     if (this._isOpen) {
       this._isOpen = false
       this.stopSlideshow()
+      if (this.pushedHash) {
+        this.pushedHash = false
+        this.ignoreNextPop = true
+        history.back()
+      }
     }
     this.teardown()
     this.removeAllListeners()
@@ -209,9 +328,10 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     }
     this._index = target
     if (this._isOpen) {
-      this.resetZoomState()
+      this.resetTransformState()
       this.renderSlides(false)
       this.updateUI()
+      this.updateHash()
       this.preloadNeighbours()
     }
     this.emit('change', this._index, this.items[this._index])
@@ -220,16 +340,30 @@ export class Lightbox extends Emitter<LightboxEventMap> {
   setItems(items: LightboxItem[]): void {
     this.items = items.slice()
     this.options.items = this.items
+    this.endNotifiedLength = -1
     if (!this._isOpen) return
     if (this.items.length === 0) {
       this.close()
       return
     }
     this._index = clamp(this._index, 0, this.items.length - 1)
-    this.resetZoomState()
+    this.resetTransformState()
     this.renderSlides(false)
     this.renderThumbnails()
     this.updateUI()
+  }
+
+  /** Append items without re-rendering the current slide — for infinite galleries (see the `end-reached` event). */
+  appendItems(items: LightboxItem[]): void {
+    if (items.length === 0) return
+    const nextSlotWasEmpty = this._isOpen && this.slides[2]?.childElementCount === 0
+    this.items.push(...items)
+    this.options.items = this.items
+    if (!this._isOpen) return
+    if (nextSlotWasEmpty) this.renderSlides(false)
+    this.renderThumbnails()
+    this.updateUI()
+    this.preloadNeighbours()
   }
 
   zoomIn(): void {
@@ -244,26 +378,49 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     this.zoomAtPoint(1, null, true)
   }
 
+  rotateLeft(): void {
+    this.applyRotate(-90)
+  }
+
+  rotateRight(): void {
+    this.applyRotate(90)
+  }
+
+  flipHorizontal(): void {
+    if (!this.currentIsImage || !this.contentEl) return
+    this.flippedX = !this.flippedX
+    this.applyTransform(this.scaleValue, this.tx, this.ty, true)
+    this.emit('flip', this.flippedX, this.flippedY)
+  }
+
+  flipVertical(): void {
+    if (!this.currentIsImage || !this.contentEl) return
+    this.flippedY = !this.flippedY
+    this.applyTransform(this.scaleValue, this.tx, this.ty, true)
+    this.emit('flip', this.flippedX, this.flippedY)
+  }
+
   toggleSlideshow(): void {
-    if (this.slideshowTimer) this.stopSlideshow()
+    if (this.playing) this.stopSlideshow()
     else this.startSlideshow()
   }
 
   startSlideshow(): void {
-    if (!this._isOpen || this.slideshowTimer || this.items.length < 2) return
-    this.slideshowTimer = setInterval(() => {
-      if (this.canGo(1)) this.navigate(1)
-      else this.stopSlideshow()
-    }, this.options.slideshowDelay)
+    if (!this._isOpen || this.playing || this.items.length < 2) return
+    this.playing = true
+    this.suspended = false
     this.root?.classList.add('lbg-playing')
     this.updateSlideshowButton()
     this.emit('slideshow:start')
+    this.scheduleAdvance()
   }
 
   stopSlideshow(): void {
-    if (!this.slideshowTimer) return
-    clearInterval(this.slideshowTimer)
-    this.slideshowTimer = null
+    if (!this.playing) return
+    this.playing = false
+    this.suspended = false
+    this.clearAdvance()
+    this.hideProgress()
     this.root?.classList.remove('lbg-playing')
     this.updateSlideshowButton()
     this.emit('slideshow:stop')
@@ -278,16 +435,37 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     }
   }
 
+  async share(): Promise<void> {
+    const item = this.items[this._index]
+    if (!item) return
+    let url = item.shareUrl ?? item.src
+    try {
+      url = this.pushedHash ? location.href : new URL(url, location.href).href
+    } catch {
+      /* keep raw url */
+    }
+    this.emit('share', item, this._index)
+    const nav = navigator as Navigator & { share?: (data: ShareData) => Promise<void> }
+    if (typeof nav.share === 'function') {
+      await nav.share({ title: item.caption, url }).catch(() => {})
+    } else if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(url).catch(() => {})
+      this.showToast(this.labels.linkCopied)
+    }
+  }
+
   // ------------------------------------------------------------ DOM build
 
   private buildDOM(): void {
     const root = el('div', 'lbg-root')
     if (this.options.className) root.classList.add(...this.options.className.split(/\s+/))
     if (this.options.animation !== 'none') root.classList.add(`lbg-anim-${this.options.animation}`)
+    if (this.inline) root.classList.add('lbg-inline')
+    if (this.rtlActive) root.classList.add('lbg-rtl')
     root.setAttribute('role', 'dialog')
-    root.setAttribute('aria-modal', 'true')
-    root.setAttribute('aria-label', 'Media gallery')
-    root.tabIndex = -1
+    root.setAttribute('aria-modal', String(!this.inline))
+    root.setAttribute('aria-label', this.labels.dialog)
+    root.tabIndex = this.inline ? 0 : -1
     this.root = root
 
     el('div', 'lbg-backdrop', root)
@@ -301,6 +479,10 @@ export class Lightbox extends Emitter<LightboxEventMap> {
       return slide
     })
 
+    // slideshow progress bar
+    const progress = el('div', 'lbg-progress', root)
+    this.progressFill = el('div', 'lbg-progress-fill', progress)
+
     // UI chrome
     const ui = el('div', 'lbg-ui', root)
     const toolbar = el('div', 'lbg-toolbar', ui)
@@ -308,46 +490,73 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     this.counterEl.setAttribute('aria-live', 'polite')
     const buttons = el('div', 'lbg-toolbar-group', toolbar)
 
-    this.slideshowBtn = button('lbg-slideshow', 'Start slideshow', icons.play, buttons)
+    this.slideshowBtn = button('lbg-slideshow', this.labels.slideshowStart, icons.play, buttons)
     this.slideshowBtn.addEventListener('click', () => this.toggleSlideshow())
 
-    this.zoomOutBtn = button('lbg-zoom-out', 'Zoom out', icons.zoomOut, buttons)
+    this.rotateLeftBtn = button('lbg-rotate-left', this.labels.rotateLeft, icons.rotateLeft, buttons)
+    this.rotateLeftBtn.addEventListener('click', () => this.rotateLeft())
+    this.rotateRightBtn = button(
+      'lbg-rotate-right',
+      this.labels.rotateRight,
+      icons.rotateRight,
+      buttons,
+    )
+    this.rotateRightBtn.addEventListener('click', () => this.rotateRight())
+    this.flipHBtn = button('lbg-flip-h', this.labels.flipHorizontal, icons.flipH, buttons)
+    this.flipHBtn.addEventListener('click', () => this.flipHorizontal())
+    this.flipVBtn = button('lbg-flip-v', this.labels.flipVertical, icons.flipV, buttons)
+    this.flipVBtn.addEventListener('click', () => this.flipVertical())
+
+    this.zoomOutBtn = button('lbg-zoom-out', this.labels.zoomOut, icons.zoomOut, buttons)
     this.zoomOutBtn.addEventListener('click', () => this.zoomOut())
-    this.zoomInBtn = button('lbg-zoom-in', 'Zoom in', icons.zoomIn, buttons)
+    this.zoomInBtn = button('lbg-zoom-in', this.labels.zoomIn, icons.zoomIn, buttons)
     this.zoomInBtn.addEventListener('click', () => this.zoomIn())
 
     this.downloadLink = el('a', 'lbg-btn lbg-download', buttons)
-    this.downloadLink.setAttribute('aria-label', 'Download')
-    this.downloadLink.title = 'Download'
+    this.downloadLink.setAttribute('aria-label', this.labels.download)
+    this.downloadLink.title = this.labels.download
     this.downloadLink.innerHTML = icons.download
     this.downloadLink.setAttribute('download', '')
     this.downloadLink.target = '_blank'
     this.downloadLink.rel = 'noopener'
 
-    this.fullscreenBtn = button('lbg-fullscreen', 'Toggle fullscreen', icons.expand, buttons)
+    this.shareBtn = button('lbg-share', this.labels.share, icons.share, buttons)
+    this.shareBtn.addEventListener('click', () => void this.share())
+
+    this.fullscreenBtn = button('lbg-fullscreen', this.labels.fullscreen, icons.expand, buttons)
     this.fullscreenBtn.addEventListener('click', () => this.toggleFullscreen())
 
-    this.closeBtn = button('lbg-close', 'Close gallery', icons.close, buttons)
+    for (const custom of this.options.toolbarButtons ?? []) {
+      const btn = button(`lbg-btn-${custom.id}`, custom.label, custom.icon, buttons)
+      btn.addEventListener('click', () => custom.onClick(this))
+    }
+
+    this.closeBtn = button('lbg-close', this.labels.close, icons.close, buttons)
     this.closeBtn.addEventListener('click', () => this.close())
 
-    this.prevBtn = button('lbg-nav lbg-nav-prev', 'Previous slide', icons.prev, ui)
+    this.prevBtn = button('lbg-nav lbg-nav-prev', this.labels.previous, icons.prev, ui)
     this.prevBtn.addEventListener('click', () => this.prev())
-    this.nextBtn = button('lbg-nav lbg-nav-next', 'Next slide', icons.next, ui)
+    this.nextBtn = button('lbg-nav lbg-nav-next', this.labels.next, icons.next, ui)
     this.nextBtn.addEventListener('click', () => this.next())
 
     this.captionEl = el('div', 'lbg-caption', ui)
     this.thumbsEl = el('div', 'lbg-thumbs', ui)
     this.thumbsEl.setAttribute('role', 'tablist')
-    this.thumbsEl.setAttribute('aria-label', 'Thumbnails')
+    this.thumbsEl.setAttribute('aria-label', this.labels.thumbnails)
+
+    // toast (share feedback etc.)
+    this.toastEl = el('div', 'lbg-toast', root)
 
     // feature toggles
     if (!this.options.counter) this.counterEl.classList.add('lbg-hidden')
     if (!this.options.slideshow || this.items.length < 2)
       this.slideshowBtn.classList.add('lbg-hidden')
     if (!this.options.download) this.downloadLink.classList.add('lbg-hidden')
+    if (!this.options.share) this.shareBtn.classList.add('lbg-hidden')
     if (!this.options.fullscreen || typeof root.requestFullscreen !== 'function')
       this.fullscreenBtn.classList.add('lbg-hidden')
     if (!this.options.thumbnails || this.items.length < 2) this.thumbsEl.classList.add('lbg-hidden')
+    if (this.inline) this.closeBtn.classList.add('lbg-hidden')
 
     // gestures
     this.stage.addEventListener('pointerdown', this.onPointerDown)
@@ -355,14 +564,23 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     this.stage.addEventListener('pointerup', this.onPointerUp)
     this.stage.addEventListener('pointercancel', this.onPointerUp)
     this.stage.addEventListener('wheel', this.onWheel, { passive: false })
-    ;(this.options.container ?? document.body).appendChild(root)
+    this.stage.addEventListener('pointerenter', this.onStageEnter)
+    this.stage.addEventListener('pointerleave', this.onStageLeave)
+
+    const host = this.options.container ?? document.body
+    if (this.inline) host.classList.add('lbg-inline-host')
+    host.appendChild(root)
   }
 
   private teardown(): void {
     if (!this.root) return
     this.pauseVideos()
-    document.removeEventListener('keydown', this.onKeyDown)
+    this.clearAdvance()
+    this.stopMomentum()
+    this.keyTarget?.removeEventListener('keydown', this.onKeyDown)
+    this.keyTarget = null
     window.removeEventListener('resize', this.onResize)
+    window.removeEventListener('popstate', this.onPopState)
     document.removeEventListener('fullscreenchange', this.onFullscreenChange)
     if (this.navTimer) {
       clearTimeout(this.navTimer)
@@ -372,18 +590,27 @@ export class Lightbox extends Emitter<LightboxEventMap> {
       clearTimeout(this.tapTimer)
       this.tapTimer = null
     }
+    if (this.toastTimer) {
+      clearTimeout(this.toastTimer)
+      this.toastTimer = null
+    }
+    if (this.inline) this.options.container?.classList.remove('lbg-inline-host')
     this.root.remove()
     this.root = null
     this.contentEl = null
+    this.progressFill = null
+    this.toastEl = null
     this.slides = []
     this.pointers.clear()
     this.gesture = 'idle'
     this.navigating = false
     this.uiHidden = false
-    this.resetZoomState()
-    this.unlockScroll()
-    this.previousFocus?.focus?.({ preventScroll: true })
-    this.previousFocus = null
+    this.resetTransformState()
+    if (!this.inline) {
+      this.unlockScroll()
+      this.previousFocus?.focus?.({ preventScroll: true })
+      this.previousFocus = null
+    }
   }
 
   private lockScroll(): void {
@@ -403,6 +630,27 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     document.body.style.paddingRight = this.bodyPaddingRight
   }
 
+  // -------------------------------------------------------- hash routing
+
+  private get hashKey(): string | null {
+    if (!this.options.hash || this.inline) return null
+    return typeof this.options.hash === 'string' ? this.options.hash : 'gallery'
+  }
+
+  private setupHash(): void {
+    const key = this.hashKey
+    if (!key || typeof history === 'undefined') return
+    history.pushState({ lbg: key }, '', `#${key}=${this._index + 1}`)
+    this.pushedHash = true
+    window.addEventListener('popstate', this.onPopState)
+  }
+
+  private updateHash(): void {
+    const key = this.hashKey
+    if (!key || !this.pushedHash) return
+    history.replaceState({ lbg: key }, '', `#${key}=${this._index + 1}`)
+  }
+
   // -------------------------------------------------------------- slides
 
   private wrapIndex(index: number): number | null {
@@ -417,7 +665,13 @@ export class Lightbox extends Emitter<LightboxEventMap> {
   }
 
   private pauseVideos(): void {
-    this.root?.querySelectorAll('video').forEach((v) => v.pause())
+    this.root?.querySelectorAll('video').forEach((v) => {
+      try {
+        v.pause()
+      } catch {
+        /* jsdom */
+      }
+    })
   }
 
   private renderSlides(animateIn: boolean): void {
@@ -469,7 +723,8 @@ export class Lightbox extends Emitter<LightboxEventMap> {
         spinner.remove()
         img.remove()
         const errBox = el('div', 'lbg-error', inner)
-        errBox.innerHTML = `${icons.error}<span>Could not load this media</span>`
+        errBox.innerHTML = `${icons.error}<span></span>`
+        errBox.querySelector('span')!.textContent = this.labels.error
         this.emit('error', item, index)
       })
       img.src = item.src
@@ -522,6 +777,72 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     }
   }
 
+  // -------------------------------------------------------- FLIP open/close
+
+  private flipSourceFor(index: number): HTMLElement | null {
+    if (this.options.animation === 'none' || this.inline) return null
+    const item = this.items[index]
+    if (!item || detectType(item) !== 'image') return null
+    const src = this.options.animateFrom?.(index)
+    if (!src) return null
+    const rect = src.getBoundingClientRect()
+    return rect.width > 0 && rect.height > 0 ? src : null
+  }
+
+  private runOpenFlip(source: HTMLElement): void {
+    const img = this.contentEl as HTMLImageElement | null
+    if (!img) return
+    const srcRect = source.getBoundingClientRect()
+    const run = (): void => {
+      if (this.contentEl !== img || !this._isOpen) return
+      const rect = img.getBoundingClientRect()
+      if (rect.width === 0) return
+      const dx = srcRect.left + srcRect.width / 2 - (rect.left + rect.width / 2)
+      const dy = srcRect.top + srcRect.height / 2 - (rect.top + rect.height / 2)
+      const s = srcRect.width / rect.width
+      img.style.transition = 'none'
+      img.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(${s})`
+      void img.offsetWidth
+      img.style.transition = `transform ${FLIP_MS}ms cubic-bezier(0.22, 0.9, 0.3, 1)`
+      img.style.transform = ''
+      setTimeout(() => {
+        if (this.contentEl === img) img.style.transition = ''
+      }, FLIP_MS + 40)
+    }
+    if (img.complete && img.naturalWidth > 0) {
+      requestAnimationFrame(run)
+    } else {
+      const timeout = setTimeout(() => img.removeEventListener('load', onLoad), 400)
+      const onLoad = (): void => {
+        clearTimeout(timeout)
+        requestAnimationFrame(run)
+      }
+      img.addEventListener('load', onLoad, { once: true })
+    }
+  }
+
+  private runCloseFlip(): void {
+    const source = this.flipSourceFor(this._index)
+    const img = this.contentEl
+    if (!source || !img) return
+    if (
+      this.scaleValue !== 1 ||
+      this.rotation % 360 !== 0 ||
+      this.flippedX ||
+      this.flippedY ||
+      this.gesture !== 'idle'
+    )
+      return
+    const rect = img.getBoundingClientRect()
+    if (rect.width === 0) return
+    const srcRect = source.getBoundingClientRect()
+    const dx = srcRect.left + srcRect.width / 2 - (rect.left + rect.width / 2)
+    const dy = srcRect.top + srcRect.height / 2 - (rect.top + rect.height / 2)
+    const s = srcRect.width / rect.width
+    img.style.transition = `transform ${CLOSE_MS}ms cubic-bezier(0.4, 0, 0.6, 1)`
+    img.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(${s})`
+  }
+
   // ----------------------------------------------------------- navigation
 
   private userNavigate(dir: 1 | -1): void {
@@ -532,6 +853,7 @@ export class Lightbox extends Emitter<LightboxEventMap> {
   private navigate(dir: 1 | -1): void {
     if (!this._isOpen || this.navigating || !this.canGo(dir)) return
     this.navigating = true
+    this.stopMomentum()
     this.setTrackOffset(0, false)
     // force reflow so the transition below always starts from the resting position
     void this.track.offsetWidth
@@ -544,11 +866,13 @@ export class Lightbox extends Emitter<LightboxEventMap> {
       }
       this.track.classList.remove('lbg-track-anim')
       this._index = this.wrapIndex(this._index + dir) as number
-      this.resetZoomState()
+      this.resetTransformState()
       this.renderSlides(false)
       this.updateUI()
+      this.updateHash()
       this.navigating = false
       this.emit('change', this._index, this.items[this._index])
+      if (this.playing) this.scheduleAdvance()
       this.preloadNeighbours()
     }
     this.navTimer = setTimeout(finish, NAV_MS)
@@ -556,9 +880,10 @@ export class Lightbox extends Emitter<LightboxEventMap> {
 
   private setTrackOffset(px: number, animate: boolean): void {
     this.track.classList.toggle('lbg-track-anim', animate)
-    this.track.style.transform = px === 0 && !animate
-      ? 'translate3d(-100%, 0, 0)'
-      : `translate3d(calc(-100% + ${px}px), 0, 0)`
+    this.track.style.transform =
+      px === 0 && !animate
+        ? 'translate3d(-100%, 0, 0)'
+        : `translate3d(calc(-100% + ${px}px), 0, 0)`
   }
 
   // ------------------------------------------------------------------- UI
@@ -579,11 +904,17 @@ export class Lightbox extends Emitter<LightboxEventMap> {
       this.captionEl.textContent = ''
     }
 
-    const zoomable = this.options.zoom && type === 'image'
+    const isImage = type === 'image'
+    const zoomable = this.options.zoom && isImage
     this.zoomInBtn.classList.toggle('lbg-hidden', !zoomable)
     this.zoomOutBtn.classList.toggle('lbg-hidden', !zoomable)
     this.zoomInBtn.disabled = this.scaleValue >= this.options.maxZoom
     this.zoomOutBtn.disabled = this.scaleValue <= 1
+
+    const rotatable = this.options.rotate && isImage
+    for (const btn of [this.rotateLeftBtn, this.rotateRightBtn, this.flipHBtn, this.flipVBtn]) {
+      btn.classList.toggle('lbg-hidden', !rotatable)
+    }
 
     if (this.options.download) {
       this.downloadLink.href = item.downloadUrl ?? item.src
@@ -609,16 +940,29 @@ export class Lightbox extends Emitter<LightboxEventMap> {
         })
       }
     })
+
+    if (
+      this.items.length > 0 &&
+      this._index >= this.items.length - 2 &&
+      this.endNotifiedLength !== this.items.length
+    ) {
+      this.endNotifiedLength = this.items.length
+      this.emit('end-reached')
+    }
   }
 
   private renderThumbnails(): void {
     this.thumbsEl.innerHTML = ''
-    if (!this.options.thumbnails || this.items.length < 2) return
+    if (!this.options.thumbnails || this.items.length < 2) {
+      this.thumbsEl.classList.add('lbg-hidden')
+      return
+    }
+    this.thumbsEl.classList.remove('lbg-hidden')
     this.items.forEach((item, i) => {
       const thumb = el('button', 'lbg-thumb', this.thumbsEl)
       thumb.type = 'button'
       thumb.setAttribute('role', 'tab')
-      thumb.setAttribute('aria-label', item.caption ?? `Slide ${i + 1}`)
+      thumb.setAttribute('aria-label', item.caption ?? `${this.labels.slide} ${i + 1}`)
       const type = detectType(item)
       const src = item.thumb ?? (type === 'image' ? item.src : item.poster)
       if (src) {
@@ -640,9 +984,8 @@ export class Lightbox extends Emitter<LightboxEventMap> {
 
   private updateSlideshowButton(): void {
     if (!this.root) return
-    const running = this.slideshowTimer !== null
-    this.slideshowBtn.innerHTML = running ? icons.pause : icons.play
-    const label = running ? 'Pause slideshow' : 'Start slideshow'
+    this.slideshowBtn.innerHTML = this.playing ? icons.pause : icons.play
+    const label = this.playing ? this.labels.slideshowPause : this.labels.slideshowStart
     this.slideshowBtn.setAttribute('aria-label', label)
     this.slideshowBtn.title = label
   }
@@ -650,6 +993,17 @@ export class Lightbox extends Emitter<LightboxEventMap> {
   private toggleUIVisibility(): void {
     this.uiHidden = !this.uiHidden
     this.root?.classList.toggle('lbg-ui-hidden', this.uiHidden)
+  }
+
+  private showToast(text: string): void {
+    if (!this.toastEl) return
+    this.toastEl.textContent = text
+    this.toastEl.classList.add('lbg-toast-show')
+    if (this.toastTimer) clearTimeout(this.toastTimer)
+    this.toastTimer = setTimeout(() => {
+      this.toastEl?.classList.remove('lbg-toast-show')
+      this.toastTimer = null
+    }, 1600)
   }
 
   private handleFullscreenChange(): void {
@@ -664,20 +1018,102 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     if (this.scaleValue !== 1) this.zoomAtPoint(this.scaleValue, null, false)
   }
 
+  // ------------------------------------------------------------ slideshow
+
+  private clearAdvance(): void {
+    if (this.advanceTimer) {
+      clearTimeout(this.advanceTimer)
+      this.advanceTimer = null
+    }
+    if (this.videoEndedCleanup) {
+      this.videoEndedCleanup()
+      this.videoEndedCleanup = null
+    }
+  }
+
+  private scheduleAdvance(): void {
+    this.clearAdvance()
+    if (!this.playing || this.suspended) return
+    const item = this.items[this._index]
+    if (item && detectType(item) === 'video') {
+      this.hideProgress()
+      const video = this.slides[1]?.querySelector('video')
+      if (video) {
+        try {
+          void video.play()?.catch?.(() => {})
+        } catch {
+          /* jsdom */
+        }
+        const onEnded = (): void => {
+          if (!this.playing) return
+          if (this.canGo(1)) this.navigate(1)
+          else this.stopSlideshow()
+        }
+        video.addEventListener('ended', onEnded)
+        this.videoEndedCleanup = () => video.removeEventListener('ended', onEnded)
+        return
+      }
+    }
+    this.startProgress()
+    this.advanceTimer = setTimeout(() => {
+      this.advanceTimer = null
+      if (this.canGo(1)) this.navigate(1)
+      else this.stopSlideshow()
+    }, this.options.slideshowDelay)
+  }
+
+  private startProgress(): void {
+    const fill = this.progressFill
+    if (!fill || !this.options.slideshowProgress) return
+    fill.style.transition = 'none'
+    fill.style.width = '0%'
+    void fill.offsetWidth
+    fill.style.transition = `width ${this.options.slideshowDelay}ms linear`
+    fill.style.width = '100%'
+  }
+
+  private hideProgress(): void {
+    const fill = this.progressFill
+    if (!fill) return
+    fill.style.transition = 'none'
+    fill.style.width = '0%'
+  }
+
+  private onStageEnter = (e: PointerEvent): void => {
+    if (e.pointerType !== 'mouse') return
+    if (this.playing && this.options.slideshowPauseOnHover && !this.suspended) {
+      this.suspended = true
+      this.clearAdvance()
+      const fill = this.progressFill
+      if (fill) {
+        fill.style.width = getComputedStyle(fill).width
+        fill.style.transition = 'none'
+      }
+    }
+  }
+
+  private onStageLeave = (e: PointerEvent): void => {
+    if (e.pointerType !== 'mouse') return
+    if (this.playing && this.suspended) {
+      this.suspended = false
+      this.scheduleAdvance()
+    }
+  }
+
   // ------------------------------------------------------------- keyboard
 
   private handleKey(e: KeyboardEvent): void {
     if (!this._isOpen || !this.root) return
     switch (e.key) {
       case 'Escape':
-        if (this.scaleValue > 1) this.resetZoom()
-        else this.close()
+        if (this.isTransformed()) this.resetZoom()
+        else if (!this.inline) this.close()
         break
       case 'ArrowLeft':
-        if (this.options.keyboard) this.prev()
+        if (this.options.keyboard) this.rtlActive ? this.next() : this.prev()
         break
       case 'ArrowRight':
-        if (this.options.keyboard) this.next()
+        if (this.options.keyboard) this.rtlActive ? this.prev() : this.next()
         break
       case '+':
       case '=':
@@ -694,6 +1130,7 @@ export class Lightbox extends Emitter<LightboxEventMap> {
         if (this.options.keyboard && this.options.fullscreen) this.toggleFullscreen()
         break
       case 'Tab': {
+        if (this.inline) break
         const focusable = getFocusable(this.root)
         if (focusable.length === 0) {
           e.preventDefault()
@@ -714,27 +1151,56 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     }
   }
 
-  // ---------------------------------------------------------------- zoom
+  // ------------------------------------------------- zoom / rotate / flip
 
   private get currentIsImage(): boolean {
     const item = this.items[this._index]
     return !!item && detectType(item) === 'image'
   }
 
-  private resetZoomState(): void {
+  private isTransformed(): boolean {
+    return (
+      this.scaleValue !== 1 ||
+      this.rotation % 360 !== 0 ||
+      this.flippedX ||
+      this.flippedY ||
+      this.tx !== 0 ||
+      this.ty !== 0
+    )
+  }
+
+  private resetTransformState(): void {
+    this.stopMomentum()
     this.scaleValue = 1
     this.tx = 0
     this.ty = 0
+    this.rotation = 0
+    this.flippedX = false
+    this.flippedY = false
     if (this.contentEl) {
       this.contentEl.style.transition = ''
       this.contentEl.style.transform = ''
     }
   }
 
+  private applyRotate(delta: number): void {
+    if (!this.currentIsImage || !this.contentEl) return
+    this.rotation += delta
+    this.applyTransform(this.scaleValue, 0, 0, true)
+    this.emit('rotate', this.rotation)
+  }
+
+  /** Effective base dimensions, accounting for 90°/270° rotation. */
+  private effectiveBase(): [number, number] {
+    const rotated = Math.abs(this.rotation % 180) === 90
+    return rotated ? [this.baseH, this.baseW] : [this.baseW, this.baseH]
+  }
+
   private clampPan(tx: number, ty: number, scale: number): [number, number] {
     const rect = this.stage.getBoundingClientRect()
-    const maxX = Math.max(0, (this.baseW * scale - rect.width) / 2)
-    const maxY = Math.max(0, (this.baseH * scale - rect.height) / 2)
+    const [bw, bh] = this.effectiveBase()
+    const maxX = Math.max(0, (bw * scale - rect.width) / 2)
+    const maxY = Math.max(0, (bh * scale - rect.height) / 2)
     return [clamp(tx, -maxX, maxX), clamp(ty, -maxY, maxY)]
   }
 
@@ -748,6 +1214,7 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     animate: boolean,
   ): void {
     if (!this._isOpen || !this.contentEl || !this.currentIsImage || !this.options.zoom) return
+    this.stopMomentum()
     if (this.baseW === 0) this.measureBase()
     const next = clamp(scale, 1, this.options.maxZoom)
     const rect = this.stage.getBoundingClientRect()
@@ -761,7 +1228,24 @@ export class Lightbox extends Emitter<LightboxEventMap> {
       ty = 0
     }
     ;[tx, ty] = this.clampPan(tx, ty, next)
+    if (this.root) this.root.style.opacity = ''
     this.applyTransform(next, tx, ty, animate)
+  }
+
+  private transformString(scale: number, tx: number, ty: number): string {
+    const fx = this.flippedX ? -1 : 1
+    const fy = this.flippedY ? -1 : 1
+    if (
+      scale === 1 &&
+      tx === 0 &&
+      ty === 0 &&
+      this.rotation % 360 === 0 &&
+      fx === 1 &&
+      fy === 1
+    ) {
+      return ''
+    }
+    return `translate3d(${tx}px, ${ty}px, 0) scale(${scale}) rotate(${this.rotation}deg) scale(${fx}, ${fy})`
   }
 
   private applyTransform(scale: number, tx: number, ty: number, animate: boolean): void {
@@ -771,14 +1255,46 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     this.tx = tx
     this.ty = ty
     this.contentEl.style.transition = animate ? 'transform 0.25s ease' : 'none'
-    this.contentEl.style.transform =
-      scale === 1 && tx === 0 && ty === 0
-        ? ''
-        : `translate3d(${tx}px, ${ty}px, 0) scale(${scale})`
+    this.contentEl.style.transform = this.transformString(scale, tx, ty)
     this.contentEl.classList.toggle('lbg-zoomed', scale > 1)
     this.zoomInBtn.disabled = scale >= this.options.maxZoom
     this.zoomOutBtn.disabled = scale <= 1
     if (changed) this.emit('zoom', scale)
+  }
+
+  // ------------------------------------------------------------- momentum
+
+  private startMomentum(vx: number, vy: number): void {
+    if (!this.options.momentum || !this.contentEl) return
+    if (Math.hypot(vx, vy) < 0.15) return
+    this.stopMomentum()
+    let last = performance.now()
+    const step = (now: number): void => {
+      this.momentumRaf = null
+      if (!this._isOpen || !this.contentEl || this.gesture !== 'idle') return
+      const dt = Math.min(now - last, 64)
+      last = now
+      const decay = Math.pow(0.95, dt / 16.7)
+      vx *= decay
+      vy *= decay
+      const nx = this.tx + vx * dt
+      const ny = this.ty + vy * dt
+      const [cx, cy] = this.clampPan(nx, ny, this.scaleValue)
+      if (cx !== nx) vx = 0
+      if (cy !== ny) vy = 0
+      this.applyTransform(this.scaleValue, cx, cy, false)
+      if (Math.hypot(vx, vy) > 0.03) {
+        this.momentumRaf = requestAnimationFrame(step)
+      }
+    }
+    this.momentumRaf = requestAnimationFrame(step)
+  }
+
+  private stopMomentum(): void {
+    if (this.momentumRaf !== null) {
+      cancelAnimationFrame(this.momentumRaf)
+      this.momentumRaf = null
+    }
   }
 
   // ------------------------------------------------------------- gestures
@@ -787,6 +1303,7 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     const target = e.target as HTMLElement
     if (target.closest('video, iframe, .lbg-html, .lbg-error')) return
     if (e.pointerType === 'mouse' && e.button !== 0) return
+    this.stopMomentum()
     this.stage.setPointerCapture?.(e.pointerId)
     this.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
 
@@ -843,7 +1360,7 @@ export class Lightbox extends Emitter<LightboxEventMap> {
       } else if (Math.abs(dx) >= Math.abs(dy) && this.options.swipe) {
         this.gesture = 'swipe'
         this.stopSlideshow()
-      } else if (this.options.swipeToClose) {
+      } else if (this.options.swipeToClose && !this.inline) {
         this.gesture = 'vclose'
       } else if (this.options.swipe) {
         this.gesture = 'swipe'
@@ -875,9 +1392,17 @@ export class Lightbox extends Emitter<LightboxEventMap> {
 
     if (this.gesture === 'pinch') {
       if (this.pointers.size < 2) {
-        if (this.scaleValue <= 1.04) this.zoomAtPoint(1, null, true)
         this.gesture = 'idle'
         this.pointers.clear()
+        if (
+          this.scaleValue < PINCH_CLOSE_SCALE &&
+          this.options.pinchToClose &&
+          !this.inline
+        ) {
+          this.close()
+        } else if (this.scaleValue <= 1.04) {
+          this.zoomAtPoint(1, null, true)
+        }
       }
       return
     }
@@ -901,6 +1426,8 @@ export class Lightbox extends Emitter<LightboxEventMap> {
         if (this.navTimer) clearTimeout(this.navTimer)
         this.navTimer = setTimeout(() => this.setTrackOffset(0, false), NAV_MS)
       }
+    } else if (gesture === 'pan') {
+      this.startMomentum(vx, vy)
     } else if (gesture === 'vclose') {
       if (Math.abs(dy) > 110 || Math.abs(vy) > 0.5) {
         this.close()
@@ -932,18 +1459,30 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     const dist = Math.hypot(a.x - b.x, a.y - b.y)
     const midX = (a.x + b.x) / 2
     const midY = (a.y + b.y) / 2
-    const next = clamp(
-      this.start.scale * (dist / Math.max(this.start.dist, 1)),
-      1,
-      this.options.maxZoom,
-    )
+    const allowBelow = this.options.pinchToClose && !this.inline
+    const raw = this.start.scale * (dist / Math.max(this.start.dist, 1))
+    let next: number
+    if (raw >= 1) {
+      next = clamp(raw, 1, this.options.maxZoom)
+    } else if (allowBelow) {
+      // rubber-band below 1x — releasing under PINCH_CLOSE_SCALE closes
+      next = Math.max(PINCH_MIN_SCALE, 1 - (1 - raw) * 0.85)
+    } else {
+      next = 1
+    }
     const rect = this.stage.getBoundingClientRect()
     const px = this.start.midX - rect.left - rect.width / 2
     const py = this.start.midY - rect.top - rect.height / 2
     const factor = next / this.start.scale
     let tx = px - (px - this.start.tx) * factor + (midX - this.start.midX)
     let ty = py - (py - this.start.ty) * factor + (midY - this.start.midY)
-    ;[tx, ty] = this.clampPan(tx, ty, next)
+    if (next >= 1) {
+      ;[tx, ty] = this.clampPan(tx, ty, next)
+    }
+    if (this.root && allowBelow) {
+      this.root.style.opacity =
+        next < 1 ? String(clamp((next - PINCH_MIN_SCALE) / (1 - PINCH_MIN_SCALE), 0.3, 1)) : ''
+    }
     this.applyTransform(next, tx, ty, false)
   }
 
@@ -974,7 +1513,7 @@ export class Lightbox extends Emitter<LightboxEventMap> {
       () => {
         this.tapTimer = null
         if (onContent) this.toggleUIVisibility()
-        else if (this.options.closeOnBackdrop) this.close()
+        else if (this.options.closeOnBackdrop && !this.inline) this.close()
       },
       zoomable ? DOUBLE_TAP_MS : 0,
     )

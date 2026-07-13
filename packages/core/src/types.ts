@@ -1,9 +1,11 @@
+import type { Lightbox } from './lightbox'
+
 export type LightboxItemType = 'image' | 'video' | 'iframe' | 'html'
 
 export interface LightboxItem {
   /** Full-size media URL (image, video file, or page URL for iframe embeds). */
   src: string
-  /** Explicit media type. Auto-detected from `src` when omitted (YouTube/Vimeo URLs become iframe embeds). */
+  /** Explicit media type. Auto-detected from `src` when omitted (YouTube/Vimeo/Wistia URLs become iframe embeds). */
   type?: LightboxItemType
   /** Thumbnail URL used in the thumbnail strip. Falls back to `src`. */
   thumb?: string
@@ -23,9 +25,44 @@ export interface LightboxItem {
   downloadUrl?: string
   /** Filename hint for the download button. */
   downloadFilename?: string
+  /** URL used by the share button. Falls back to `src` (or the page URL when hash routing is active). */
+  shareUrl?: string
 }
 
 export type LightboxAnimation = 'zoom' | 'fade' | 'none'
+
+/** All user-visible strings — override via the `labels` option for i18n. */
+export interface LightboxLabels {
+  dialog: string
+  close: string
+  previous: string
+  next: string
+  zoomIn: string
+  zoomOut: string
+  fullscreen: string
+  slideshowStart: string
+  slideshowPause: string
+  download: string
+  share: string
+  rotateLeft: string
+  rotateRight: string
+  flipHorizontal: string
+  flipVertical: string
+  thumbnails: string
+  slide: string
+  error: string
+  linkCopied: string
+}
+
+export interface LightboxToolbarButton {
+  /** Unique id — added to the button class as `lbg-btn-<id>`. */
+  id: string
+  /** Accessible label / tooltip. */
+  label: string
+  /** Inner HTML of the button, typically an inline SVG icon. */
+  icon: string
+  onClick: (lightbox: Lightbox) => void
+}
 
 export interface LightboxOptions {
   /** Gallery items. */
@@ -46,6 +83,10 @@ export interface LightboxOptions {
   swipe?: boolean
   /** Swipe down (or up) to close. @default true */
   swipeToClose?: boolean
+  /** Pinch inward below 1x to close (touch). @default true */
+  pinchToClose?: boolean
+  /** Inertia when releasing a pan on a zoomed image. @default true */
+  momentum?: boolean
   /** Keyboard navigation (arrows, Escape, +/-, 0, f). @default true */
   keyboard?: boolean
   /** Show the "3 / 12" counter. @default true */
@@ -62,15 +103,47 @@ export interface LightboxOptions {
   slideshow?: boolean
   /** Milliseconds between slideshow advances. @default 4000 */
   slideshowDelay?: number
+  /** Show a progress bar while the slideshow runs. @default true */
+  slideshowProgress?: boolean
+  /** Pause the slideshow while the mouse hovers the stage. @default true */
+  slideshowPauseOnHover?: boolean
   /** Show a download button. @default false */
   download?: boolean
+  /** Show a share button (Web Share API with copy-link fallback). @default false */
+  share?: boolean
+  /** Show rotate / flip buttons for images. @default false */
+  rotate?: boolean
+  /**
+   * Sync the open slide to the URL hash (`#gallery=3`) so slides are shareable
+   * and the browser back button closes the lightbox. Pass a string to use a
+   * custom hash key. @default false
+   */
+  hash?: boolean | string
+  /**
+   * Render inside `container` as an inline gallery / carousel instead of a
+   * fullscreen overlay. Disables scroll locking, swipe/pinch-to-close,
+   * backdrop close, hash routing and the close button. @default false
+   */
+  inline?: boolean
   /** Close when the backdrop is clicked. @default true */
   closeOnBackdrop?: boolean
   /** How many neighbouring images to preload on each side. @default 2 */
   preload?: number
   /** Opening animation. @default 'zoom' */
   animation?: LightboxAnimation
-  /** Extra class added to the root element (for theming). */
+  /**
+   * Return the gallery element (usually the clicked thumbnail) for a given
+   * index. When provided, opening and closing animate the image from/to that
+   * element (FLIP transition). `bindGallery` wires this automatically.
+   */
+  animateFrom?: (index: number) => HTMLElement | null | undefined
+  /** Right-to-left mode: swaps arrow-key direction and nav button sides. Defaults to `document.dir === 'rtl'`. */
+  rtl?: boolean
+  /** Override any user-visible string (i18n). */
+  labels?: Partial<LightboxLabels>
+  /** Extra toolbar buttons, inserted before the close button. */
+  toolbarButtons?: LightboxToolbarButton[]
+  /** Extra class added to the root element (e.g. `lbg-theme-light`, `lbg-theme-glass`, `lbg-theme-minimal`). */
   className?: string
   /** Element the lightbox is appended to. @default document.body */
   container?: HTMLElement
@@ -81,6 +154,11 @@ export type LightboxEventMap = {
   close: []
   change: [index: number, item: LightboxItem]
   zoom: [scale: number]
+  rotate: [degrees: number]
+  flip: [horizontal: boolean, vertical: boolean]
+  share: [item: LightboxItem, index: number]
+  /** Fired when navigation gets within one slide of the end — use with `appendItems` for infinite galleries. */
+  'end-reached': []
   'slideshow:start': []
   'slideshow:stop': []
   'fullscreen:enter': []
