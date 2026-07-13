@@ -1,9 +1,9 @@
-import { Lightbox, bindGallery } from '@lightbox-gallery/core'
-import type { BoundGallery, LightboxItem, LightboxOptions } from '@lightbox-gallery/core'
-import styles from '@lightbox-gallery/core/styles.css'
+import { Lightbox, bindGallery } from '@anil-labs/lightbox-gallery-core'
+import type { BoundGallery, LightboxItem, LightboxOptions } from '@anil-labs/lightbox-gallery-core'
+import styles from '@anil-labs/lightbox-gallery-core/styles.css'
 
-export type { LightboxItem, LightboxOptions } from '@lightbox-gallery/core'
-export { Lightbox } from '@lightbox-gallery/core'
+export type { LightboxItem, LightboxOptions } from '@anil-labs/lightbox-gallery-core'
+export { Lightbox } from '@anil-labs/lightbox-gallery-core'
 
 const STYLE_ID = 'lightbox-gallery-styles'
 

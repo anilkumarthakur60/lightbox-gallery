@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@lightbox-gallery/core": "workspace:*"
+    "@anil-labs/lightbox-gallery-core": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.7.2",

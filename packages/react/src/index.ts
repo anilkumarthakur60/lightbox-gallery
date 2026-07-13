@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Lightbox as CoreLightbox } from '@lightbox-gallery/core'
-import type { LightboxItem, LightboxOptions } from '@lightbox-gallery/core'
+import { Lightbox as CoreLightbox } from '@anil-labs/lightbox-gallery-core'
+import type { LightboxItem, LightboxOptions } from '@anil-labs/lightbox-gallery-core'
 
-export type { LightboxItem, LightboxOptions } from '@lightbox-gallery/core'
-export { Lightbox as CoreLightbox } from '@lightbox-gallery/core'
+export type { LightboxItem, LightboxOptions } from '@anil-labs/lightbox-gallery-core'
+export { Lightbox as CoreLightbox } from '@anil-labs/lightbox-gallery-core'
 
 export interface LightboxProps extends Omit<LightboxOptions, 'startIndex'> {
   /** Whether the lightbox is shown (controlled). */

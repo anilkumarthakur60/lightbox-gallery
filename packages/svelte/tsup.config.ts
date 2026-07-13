@@ -7,5 +7,5 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   target: 'es2020',
-  external: ['svelte', 'svelte/store', '@lightbox-gallery/core'],
+  external: ['svelte', 'svelte/store', '@anil-labs/lightbox-gallery-core'],
 })

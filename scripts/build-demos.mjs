@@ -106,7 +106,7 @@ const html = `<!doctype html>
       <div class="grid">${cards}
       </div>
       <footer>
-        Also ships <code>@lightbox-gallery/svelte</code>, <code>/solid</code> and a <code>&lt;lightbox-gallery&gt;</code> web component.
+        Also ships <code>@anil-labs/lightbox-gallery-svelte</code>, <code>/solid</code> and a <code>&lt;lightbox-gallery&gt;</code> web component.
       </footer>
     </main>
   </body>

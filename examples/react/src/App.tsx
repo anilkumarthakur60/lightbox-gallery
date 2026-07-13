@@ -1,4 +1,4 @@
-import { Lightbox, useLightbox, type LightboxItem } from '@lightbox-gallery/react'
+import { Lightbox, useLightbox, type LightboxItem } from '@anil-labs/lightbox-gallery-react'
 
 const items: LightboxItem[] = [
   ...Array.from({ length: 8 }, (_, i) => ({

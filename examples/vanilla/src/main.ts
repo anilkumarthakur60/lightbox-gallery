@@ -1,5 +1,5 @@
-import { bindGallery } from '@lightbox-gallery/core'
-import '@lightbox-gallery/core/styles.css'
+import { bindGallery } from '@anil-labs/lightbox-gallery-core'
+import '@anil-labs/lightbox-gallery-core/styles.css'
 
 const photos = Array.from({ length: 9 }, (_, i) => ({
   full: `https://picsum.photos/id/${i * 12 + 10}/1600/1067`,

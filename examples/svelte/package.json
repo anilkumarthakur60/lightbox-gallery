@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@lightbox-gallery/core": "workspace:*",
-    "@lightbox-gallery/svelte": "workspace:*",
+    "@anil-labs/lightbox-gallery-core": "workspace:*",
+    "@anil-labs/lightbox-gallery-svelte": "workspace:*",
     "svelte": "^5.15.0"
   },
   "devDependencies": {

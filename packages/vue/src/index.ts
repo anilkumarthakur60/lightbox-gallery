@@ -7,11 +7,11 @@ import {
   type PropType,
   type Ref,
 } from 'vue'
-import { Lightbox as CoreLightbox } from '@lightbox-gallery/core'
-import type { LightboxItem, LightboxOptions } from '@lightbox-gallery/core'
+import { Lightbox as CoreLightbox } from '@anil-labs/lightbox-gallery-core'
+import type { LightboxItem, LightboxOptions } from '@anil-labs/lightbox-gallery-core'
 
-export type { LightboxItem, LightboxOptions } from '@lightbox-gallery/core'
-export { Lightbox as CoreLightbox } from '@lightbox-gallery/core'
+export type { LightboxItem, LightboxOptions } from '@anil-labs/lightbox-gallery-core'
+export { Lightbox as CoreLightbox } from '@anil-labs/lightbox-gallery-core'
 
 export type LightboxComponentOptions = Omit<LightboxOptions, 'items' | 'startIndex'>
 

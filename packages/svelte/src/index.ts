@@ -1,9 +1,9 @@
 import { writable, type Readable } from 'svelte/store'
-import { Lightbox as CoreLightbox, bindGallery } from '@lightbox-gallery/core'
-import type { LightboxItem, LightboxOptions } from '@lightbox-gallery/core'
+import { Lightbox as CoreLightbox, bindGallery } from '@anil-labs/lightbox-gallery-core'
+import type { LightboxItem, LightboxOptions } from '@anil-labs/lightbox-gallery-core'
 
-export type { LightboxItem, LightboxOptions } from '@lightbox-gallery/core'
-export { Lightbox as CoreLightbox, bindGallery } from '@lightbox-gallery/core'
+export type { LightboxItem, LightboxOptions } from '@anil-labs/lightbox-gallery-core'
+export { Lightbox as CoreLightbox, bindGallery } from '@anil-labs/lightbox-gallery-core'
 
 export interface LightboxController {
   /** Reactive open state — `$lightbox.isOpen` friendly. */
@@ -29,8 +29,8 @@ export interface LightboxController {
  *
  * ```svelte
  * <script>
- *   import { createLightbox } from '@lightbox-gallery/svelte'
- *   import '@lightbox-gallery/core/styles.css'
+ *   import { createLightbox } from '@anil-labs/lightbox-gallery-svelte'
+ *   import '@anil-labs/lightbox-gallery-core/styles.css'
  *
  *   const gallery = createLightbox(items, { loop: true })
  *   const { isOpen, index } = gallery

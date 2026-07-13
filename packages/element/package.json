@@ -1,7 +1,7 @@
 {
-  "name": "@lightbox-gallery/element",
+  "name": "@anil-labs/lightbox-gallery-element",
   "version": "0.1.0",
-  "description": "Web Component (<lightbox-gallery>) for @lightbox-gallery/core — works in any framework or plain HTML via a script tag.",
+  "description": "Web Component (<lightbox-gallery>) for @anil-labs/lightbox-gallery-core — works in any framework or plain HTML via a script tag.",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -22,8 +22,9 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "test": "echo \"covered by @lightbox-gallery/core\"",
-    "typecheck": "tsc --noEmit"
+    "test": "echo \"covered by @anil-labs/lightbox-gallery-core\"",
+    "typecheck": "tsc --noEmit",
+    "prepack": "pnpm run build"
   },
   "keywords": [
     "web-component",
@@ -35,11 +36,19 @@
     "carousel"
   ],
   "license": "MIT",
+  "author": "Er. Anil Kumar Thakur <anilkumarthakur60@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anilkumarthakur60/lightbox-gallery.git",
+    "directory": "packages/element"
+  },
+  "homepage": "https://github.com/anilkumarthakur60/lightbox-gallery/tree/main/packages/element#readme",
+  "bugs": "https://github.com/anilkumarthakur60/lightbox-gallery/issues",
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "@lightbox-gallery/core": "workspace:^"
+    "@anil-labs/lightbox-gallery-core": "workspace:^"
   },
   "devDependencies": {
     "tsup": "^8.3.5",

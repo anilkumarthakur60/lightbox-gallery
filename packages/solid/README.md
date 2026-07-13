@@ -1,14 +1,14 @@
-# @lightbox-gallery/solid
+# @anil-labs/lightbox-gallery-solid
 
-SolidJS bindings for [`@lightbox-gallery/core`](https://www.npmjs.com/package/@lightbox-gallery/core) — a modern lightbox gallery with zoom, swipe, thumbnails, slideshow, fullscreen and video support.
+SolidJS bindings for [`@anil-labs/lightbox-gallery-core`](https://www.npmjs.com/package/@anil-labs/lightbox-gallery-core) — a modern lightbox gallery with zoom, swipe, thumbnails, slideshow, fullscreen and video support.
 
 ```bash
-pnpm add @lightbox-gallery/solid @lightbox-gallery/core
+pnpm add @anil-labs/lightbox-gallery-solid @anil-labs/lightbox-gallery-core
 ```
 
 ```tsx
-import { Lightbox, useLightbox } from '@lightbox-gallery/solid'
-import '@lightbox-gallery/core/styles.css'
+import { Lightbox, useLightbox } from '@anil-labs/lightbox-gallery-solid'
+import '@anil-labs/lightbox-gallery-core/styles.css'
 
 function Gallery() {
   const lb = useLightbox()

@@ -1,6 +1,6 @@
 // Importing the package registers the <lightbox-gallery> custom element and
 // auto-injects the stylesheet — no separate CSS import needed.
-import '@lightbox-gallery/element'
+import '@anil-labs/lightbox-gallery-element'
 
 const photos = Array.from({ length: 9 }, (_, i) => ({
   full: `https://picsum.photos/id/${i * 12 + 10}/1600/1067`,

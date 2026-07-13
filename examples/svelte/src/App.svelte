@@ -1,5 +1,5 @@
 <script>
-  import { createLightbox } from '@lightbox-gallery/svelte'
+  import { createLightbox } from '@anil-labs/lightbox-gallery-svelte'
 
   const items = [
     ...Array.from({ length: 8 }, (_, i) => ({

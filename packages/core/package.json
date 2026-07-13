@@ -1,6 +1,6 @@
 {
-  "name": "@lightbox-gallery/core",
-  "version": "0.2.0",
+  "name": "@anil-labs/lightbox-gallery-core",
+  "version": "0.1.0",
   "description": "Modern, dependency-free lightbox gallery: zoom & pinch, swipe, thumbnails, slideshow, fullscreen, captions, video, keyboard navigation and full a11y.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -26,7 +26,8 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepack": "pnpm run build"
   },
   "keywords": [
     "lightbox",
@@ -39,6 +40,14 @@
     "viewer"
   ],
   "license": "MIT",
+  "author": "Er. Anil Kumar Thakur <anilkumarthakur60@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anilkumarthakur60/lightbox-gallery.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/anilkumarthakur60/lightbox-gallery/tree/main/packages/core#readme",
+  "bugs": "https://github.com/anilkumarthakur60/lightbox-gallery/issues",
   "publishConfig": {
     "access": "public"
   },

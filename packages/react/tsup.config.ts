@@ -7,5 +7,5 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   target: 'es2020',
-  external: ['react', '@lightbox-gallery/core'],
+  external: ['react', '@anil-labs/lightbox-gallery-core'],
 })

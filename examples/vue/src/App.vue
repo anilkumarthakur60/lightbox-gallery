@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Lightbox, useLightbox, type LightboxItem } from '@lightbox-gallery/vue'
+import { Lightbox, useLightbox, type LightboxItem } from '@anil-labs/lightbox-gallery-vue'
 
 const items: LightboxItem[] = [
   ...Array.from({ length: 8 }, (_, i) => ({

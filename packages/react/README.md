@@ -1,14 +1,14 @@
-# @lightbox-gallery/react
+# @anil-labs/lightbox-gallery-react
 
-React bindings for [`@lightbox-gallery/core`](https://www.npmjs.com/package/@lightbox-gallery/core) — a modern lightbox gallery with zoom, swipe, thumbnails, slideshow, fullscreen and video support.
+React bindings for [`@anil-labs/lightbox-gallery-core`](https://www.npmjs.com/package/@anil-labs/lightbox-gallery-core) — a modern lightbox gallery with zoom, swipe, thumbnails, slideshow, fullscreen and video support.
 
 ```bash
-pnpm add @lightbox-gallery/react @lightbox-gallery/core
+pnpm add @anil-labs/lightbox-gallery-react @anil-labs/lightbox-gallery-core
 ```
 
 ```tsx
-import { Lightbox, useLightbox } from '@lightbox-gallery/react'
-import '@lightbox-gallery/core/styles.css'
+import { Lightbox, useLightbox } from '@anil-labs/lightbox-gallery-react'
+import '@anil-labs/lightbox-gallery-core/styles.css'
 
 function Gallery({ items }) {
   const { open, lightboxProps } = useLightbox(items, { loop: true })

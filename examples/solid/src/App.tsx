@@ -1,5 +1,5 @@
 import { For } from 'solid-js'
-import { Lightbox, useLightbox, type LightboxItem } from '@lightbox-gallery/solid'
+import { Lightbox, useLightbox, type LightboxItem } from '@anil-labs/lightbox-gallery-solid'
 
 const items: LightboxItem[] = [
   ...Array.from({ length: 8 }, (_, i) => ({

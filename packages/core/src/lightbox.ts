@@ -98,7 +98,7 @@ interface TracePoint {
 }
 
 export class Lightbox extends Emitter<LightboxEventMap> {
-  static readonly version = '0.2.0'
+  static readonly version = '0.1.0'
 
   /** Parse a slide index from the current URL hash (`#gallery=3` → 2). */
   static parseHash(key = 'gallery'): number | null {

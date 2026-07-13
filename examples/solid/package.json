@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@lightbox-gallery/core": "workspace:*",
-    "@lightbox-gallery/solid": "workspace:*",
+    "@anil-labs/lightbox-gallery-core": "workspace:*",
+    "@anil-labs/lightbox-gallery-solid": "workspace:*",
     "solid-js": "^1.9.3"
   },
   "devDependencies": {

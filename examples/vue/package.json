@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@lightbox-gallery/core": "workspace:*",
-    "@lightbox-gallery/vue": "workspace:*",
+    "@anil-labs/lightbox-gallery-core": "workspace:*",
+    "@anil-labs/lightbox-gallery-vue": "workspace:*",
     "vue": "^3.5.13"
   },
   "devDependencies": {

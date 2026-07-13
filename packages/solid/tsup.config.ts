@@ -7,5 +7,5 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   target: 'es2020',
-  external: ['solid-js', '@lightbox-gallery/core'],
+  external: ['solid-js', '@anil-labs/lightbox-gallery-core'],
 })
