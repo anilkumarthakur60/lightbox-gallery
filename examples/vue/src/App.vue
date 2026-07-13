@@ -29,6 +29,6 @@ const { isOpen, index, open } = useLightbox()
     :items="items"
     v-model:open="isOpen"
     v-model:index="index"
-    :options="{ loop: true, download: true }"
+    :options="{ loop: true, download: true, share: true, rotate: true }"
   />
 </template>

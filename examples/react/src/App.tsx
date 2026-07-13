@@ -17,6 +17,9 @@ export default function App() {
   const { open, lightboxProps } = useLightbox(items, {
     loop: true,
     download: true,
+    share: true,
+    rotate: true,
+    animateFrom: (i) => document.querySelectorAll<HTMLElement>('.grid img')[i] ?? null,
   })
 
   return (

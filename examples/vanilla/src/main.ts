@@ -20,5 +20,8 @@ grid.innerHTML = photos
 bindGallery('a[data-gallery]', {
   loop: true,
   download: true,
+  share: true,
+  rotate: true,
+  hash: true,
   slideshowDelay: 3000,
 })
