@@ -1,0 +1,58 @@
+{
+  "name": "@anil-labs/lightbox-gallery-svelte",
+  "version": "0.1.0",
+  "description": "Svelte bindings for @anil-labs/lightbox-gallery-core — a modern lightbox gallery with zoom, swipe, thumbnails, slideshow and video support.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "echo \"covered by @anil-labs/lightbox-gallery-core\"",
+    "typecheck": "tsc --noEmit",
+    "prepack": "pnpm run build"
+  },
+  "keywords": [
+    "svelte",
+    "lightbox",
+    "gallery",
+    "image",
+    "zoom",
+    "carousel"
+  ],
+  "license": "MIT",
+  "author": "Er. Anil Kumar Thakur <anilkumarthakur60@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anilkumarthakur60/lightbox-gallery.git",
+    "directory": "packages/svelte"
+  },
+  "homepage": "https://github.com/anilkumarthakur60/lightbox-gallery/tree/main/packages/svelte#readme",
+  "bugs": "https://github.com/anilkumarthakur60/lightbox-gallery/issues",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@anil-labs/lightbox-gallery-core": "workspace:^"
+  },
+  "peerDependencies": {
+    "svelte": "^4.0.0 || ^5.0.0"
+  },
+  "devDependencies": {
+    "svelte": "^5.15.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  }
+}
