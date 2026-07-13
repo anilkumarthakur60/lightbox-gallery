@@ -1,0 +1,49 @@
+{
+  "name": "@lightbox-gallery/core",
+  "version": "0.1.0",
+  "description": "Modern, dependency-free lightbox gallery: zoom & pinch, swipe, thumbnails, slideshow, fullscreen, captions, video, keyboard navigation and full a11y.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "lightbox",
+    "gallery",
+    "image",
+    "zoom",
+    "carousel",
+    "photoswipe",
+    "modal",
+    "viewer"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "jsdom": "^25.0.1",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

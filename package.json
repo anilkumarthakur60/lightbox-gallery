@@ -1,0 +1,19 @@
+{
+  "name": "lightbox-gallery-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Monorepo for @lightbox-gallery — a modern, framework-agnostic lightbox with React and Vue bindings",
+  "scripts": {
+    "build": "pnpm --filter \"./packages/*\" -r build",
+    "dev": "pnpm --filter \"./packages/*\" -r --parallel dev",
+    "test": "pnpm --filter \"./packages/*\" -r test",
+    "typecheck": "pnpm --filter \"./packages/*\" -r typecheck",
+    "example:vanilla": "pnpm --filter example-vanilla dev",
+    "example:react": "pnpm --filter example-react dev",
+    "example:vue": "pnpm --filter example-vue dev"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@11.12.0"
+}
