@@ -1,0 +1,60 @@
+{
+  "name": "@anil-labs/lightbox-gallery-core",
+  "version": "0.1.0",
+  "description": "Modern, dependency-free lightbox gallery: zoom & pinch, swipe, thumbnails, slideshow, fullscreen, captions, video, keyboard navigation and full a11y.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/index.global.js",
+  "jsdelivr": "./dist/index.global.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "prepack": "pnpm run build"
+  },
+  "keywords": [
+    "lightbox",
+    "gallery",
+    "image",
+    "zoom",
+    "carousel",
+    "photoswipe",
+    "modal",
+    "viewer"
+  ],
+  "license": "MIT",
+  "author": "Er. Anil Kumar Thakur <anilkumarthakur60@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anilkumarthakur60/lightbox-gallery.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/anilkumarthakur60/lightbox-gallery/tree/main/packages/core#readme",
+  "bugs": "https://github.com/anilkumarthakur60/lightbox-gallery/issues",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "jsdom": "^25.0.1",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
