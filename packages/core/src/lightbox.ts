@@ -288,13 +288,19 @@ export class Lightbox extends Emitter<LightboxEventMap> {
       this.ignoreNextPop = true
       history.back()
     }
-    this.emit('close')
+    // Run the close animation and schedule teardown BEFORE emitting `close`.
+    // A listener may synchronously destroy this instance (e.g. a controlled
+    // component unmounting on close, as Solid does), which nulls `this.root`;
+    // doing DOM work first keeps close() re-entrancy-safe.
     this.runCloseFlip()
     this.root.classList.add('lbg-closing')
-    this.closeTimer = setTimeout(() => {
-      this.closeTimer = null
-      this.teardown()
-    }, CLOSE_MS)
+    if (!this.closeTimer) {
+      this.closeTimer = setTimeout(() => {
+        this.closeTimer = null
+        this.teardown()
+      }, CLOSE_MS)
+    }
+    this.emit('close')
   }
 
   destroy(): void {

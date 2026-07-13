@@ -122,6 +122,17 @@ describe('Lightbox', () => {
     expect(document.body.style.overflow).toBe('')
   })
 
+  it('survives a listener that destroys the instance during close (re-entrancy)', () => {
+    // reproduces the Solid crash: a controlled wrapper unmounts synchronously
+    // on the close event, calling destroy() mid-close()
+    const lb = new Lightbox({ items })
+    lb.open(0)
+    lb.on('close', () => lb.destroy())
+    expect(() => lb.close()).not.toThrow()
+    expect(lb.isOpen).toBe(false)
+    expect(document.querySelector('.lbg-root')).toBeNull()
+  })
+
   it('does not open with an empty item list', () => {
     const lb = new Lightbox({ items: [] })
     lb.open()

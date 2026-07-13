@@ -23,9 +23,11 @@ const run = (cmd) => {
 }
 
 const demos = [
-  { slug: 'vanilla', filter: 'example-vanilla', label: 'Vanilla JS', desc: 'Plain HTML + the bindGallery() progressive-enhancement helper. No framework.' },
   { slug: 'react', filter: 'example-react', label: 'React', desc: 'The <Lightbox> component with the useLightbox() hook.' },
   { slug: 'vue', filter: 'example-vue', label: 'Vue 3', desc: 'The <Lightbox> component with v-model:open / v-model:index.' },
+  { slug: 'svelte', filter: 'example-svelte', label: 'Svelte', desc: 'The createLightbox() store controller, with reactive open/index.' },
+  { slug: 'solid', filter: 'example-solid', label: 'Solid', desc: 'The <Lightbox> component with useLightbox() signals.' },
+  { slug: 'element', filter: 'example-element', label: 'Web Component', desc: 'The <lightbox-gallery bind="a"> custom element — any framework or plain HTML.' },
 ]
 
 // 1. Build the workspace packages the examples depend on (core + wrappers).
