@@ -1,5 +1,9 @@
 # Web Component
 
+::: tip Live demo
+▶️ [Open the Web Component demo](https://lightbox-gallery-three.vercel.app/element/) — click a thumbnail to try zoom, swipe, slideshow, share and more.
+:::
+
 `<lightbox-gallery>` is a custom element that works in any framework — or plain HTML with a `<script>` tag. Styles are injected automatically, so there's no separate CSS import.
 
 ```bash

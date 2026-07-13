@@ -10,11 +10,11 @@ hero:
       text: Get Started
       link: /guide/getting-started
     - theme: alt
+      text: Live Demos
+      link: https://lightbox-gallery-three.vercel.app
+    - theme: alt
       text: View on GitHub
       link: https://github.com/anilkumarthakur60/lightbox-gallery
-    - theme: alt
-      text: Frameworks
-      link: /frameworks/react
 
 features:
   - icon: 🔍

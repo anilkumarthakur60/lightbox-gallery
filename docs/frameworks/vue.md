@@ -1,5 +1,9 @@
 # Vue 3
 
+::: tip Live demo
+▶️ [Open the Vue demo](https://lightbox-gallery-three.vercel.app/vue/) — click a thumbnail to try zoom, swipe, slideshow, share and more.
+:::
+
 ```bash
 pnpm add @anil-labs/lightbox-gallery-vue @anil-labs/lightbox-gallery-core
 ```

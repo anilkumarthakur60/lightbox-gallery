@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 const REPO = 'https://github.com/anilkumarthakur60/lightbox-gallery'
+const DEMOS = 'https://lightbox-gallery-three.vercel.app'
 
 export default defineConfig({
   title: 'lightbox-gallery',
@@ -26,6 +27,7 @@ export default defineConfig({
       { text: 'Guide', link: '/guide/getting-started' },
       { text: 'Frameworks', link: '/frameworks/react' },
       { text: 'Reference', link: '/reference/options' },
+      { text: 'Demos', link: DEMOS },
       {
         text: '0.1.0',
         items: [

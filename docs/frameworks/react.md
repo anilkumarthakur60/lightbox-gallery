@@ -1,5 +1,9 @@
 # React
 
+::: tip Live demo
+▶️ [Open the React demo](https://lightbox-gallery-three.vercel.app/react/) — click a thumbnail to try zoom, swipe, slideshow, share and more.
+:::
+
 ```bash
 pnpm add @anil-labs/lightbox-gallery-react @anil-labs/lightbox-gallery-core
 ```

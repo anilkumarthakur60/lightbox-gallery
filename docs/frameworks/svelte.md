@@ -1,5 +1,9 @@
 # Svelte
 
+::: tip Live demo
+▶️ [Open the Svelte demo](https://lightbox-gallery-three.vercel.app/svelte/) — click a thumbnail to try zoom, swipe, slideshow, share and more.
+:::
+
 ```bash
 pnpm add @anil-labs/lightbox-gallery-svelte @anil-labs/lightbox-gallery-core
 ```

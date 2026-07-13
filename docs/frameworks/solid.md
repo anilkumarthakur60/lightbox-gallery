@@ -1,5 +1,9 @@
 # Solid
 
+::: tip Live demo
+▶️ [Open the Solid demo](https://lightbox-gallery-three.vercel.app/solid/) — click a thumbnail to try zoom, swipe, slideshow, share and more.
+:::
+
 ```bash
 pnpm add @anil-labs/lightbox-gallery-solid @anil-labs/lightbox-gallery-core
 ```

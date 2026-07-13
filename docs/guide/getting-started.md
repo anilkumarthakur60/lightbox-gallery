@@ -1,5 +1,9 @@
 # Getting Started
 
+::: tip See it live
+▶️ [Live demos](https://lightbox-gallery-three.vercel.app) for React, Vue, Svelte, Solid and the Web Component.
+:::
+
 ## Installation
 
 Install the core package (plus your framework binding, if any). The core ships the stylesheet you import once.
