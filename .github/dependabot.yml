@@ -10,7 +10,7 @@ updates:
     groups:
       github-actions:
         patterns:
-          - "*"
+          - '*'
 
   # ── npm / pnpm dependencies (single root pnpm-lock.yaml covers the workspace) ──
   - package-ecosystem: npm
@@ -27,4 +27,4 @@ updates:
       dev-dependencies:
         dependency-type: development
         patterns:
-          - "*"
+          - '*'

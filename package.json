@@ -8,6 +8,7 @@
     "build": "pnpm --filter \"./packages/*\" -r build",
     "dev": "pnpm --filter \"./packages/*\" -r --parallel dev",
     "test": "pnpm --filter \"./packages/*\" -r test",
+    "test:coverage": "pnpm --filter @anil-labs/lightbox-gallery-core test:coverage",
     "typecheck": "pnpm --filter \"./packages/*\" -r typecheck",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

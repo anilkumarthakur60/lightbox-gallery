@@ -1,6 +1,7 @@
 # lightbox-gallery
 
 <p>
+  <a href="https://github.com/anilkumarthakur60/lightbox-gallery/actions/workflows/ci.yml"><img src="https://github.com/anilkumarthakur60/lightbox-gallery/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <a href="https://www.npmjs.com/package/@anil-labs/lightbox-gallery-core"><img src="https://img.shields.io/npm/v/@anil-labs/lightbox-gallery-core.svg?color=cb3837&label=npm" alt="npm version" /></a>
   <a href="https://bundlephobia.com/package/@anil-labs/lightbox-gallery-core"><img src="https://img.shields.io/bundlephobia/minzip/@anil-labs/lightbox-gallery-core?label=min%2Bgzip" alt="bundle size" /></a>
   <img src="https://img.shields.io/badge/dependencies-0-brightgreen.svg" alt="zero dependencies" />
@@ -15,7 +16,7 @@ A modern, **dependency-free** lightbox gallery for the web — zoom, pinch, swip
 - 📱 Touch-first: pinch-zoom, momentum pan, swipe-to-close
 - ♿ Accessible and SSR-safe by default
 
-> **[🚀 Live demos](https://anil-labs-lightbox-gallery.vercel.app)** &nbsp;·&nbsp; **[📖 Documentation](https://github.com/anilkumarthakur60/lightbox-gallery)**
+> **[🚀 Live demos](https://anil-labs-lightbox-gallery.vercel.app)** &nbsp;·&nbsp; **[📖 Documentation](https://anilkumarthakur60.github.io/lightbox-gallery/)**
 
 ---
 

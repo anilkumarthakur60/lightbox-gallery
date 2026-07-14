@@ -4,6 +4,9 @@ const REPO = 'https://github.com/anilkumarthakur60/lightbox-gallery'
 const DEMOS = 'https://anil-labs-lightbox-gallery.vercel.app'
 
 export default defineConfig({
+  // '/' for local dev and custom domains; the Pages workflow sets DOCS_BASE
+  // to '/lightbox-gallery/' for the GitHub Pages project site.
+  base: process.env.DOCS_BASE ?? '/',
   title: 'lightbox-gallery',
   description:
     'A modern, dependency-free lightbox gallery with zoom, swipe, thumbnails, slideshow, video and full a11y — for React, Vue, Svelte, Solid and Web Components.',
