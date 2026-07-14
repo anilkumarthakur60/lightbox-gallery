@@ -11,7 +11,7 @@
   "dependencies": {
     "@anil-labs/lightbox-gallery-core": "workspace:*",
     "@anil-labs/lightbox-gallery-svelte": "workspace:*",
-    "svelte": "^5.15.0"
+    "svelte": "^5.56.5"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
