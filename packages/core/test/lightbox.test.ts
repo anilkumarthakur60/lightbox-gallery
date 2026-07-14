@@ -39,6 +39,28 @@ describe('Lightbox', () => {
     lb.destroy()
   })
 
+  it('applies the theme option as a class on the root', () => {
+    const dark = new Lightbox({ items })
+    dark.open(0)
+    const darkRoot = document.querySelector('.lbg-root')
+    expect(darkRoot?.classList.contains('lbg-theme-light')).toBe(false)
+    expect(darkRoot?.classList.contains('lbg-theme-auto')).toBe(false)
+    dark.destroy()
+
+    const light = new Lightbox({ items, theme: 'light' })
+    light.open(0)
+    expect(document.querySelector('.lbg-root')?.classList.contains('lbg-theme-light')).toBe(true)
+    light.destroy()
+
+    const auto = new Lightbox({ items, theme: 'auto', className: 'brand' })
+    auto.open(0)
+    const autoRoot = document.querySelector('.lbg-root')
+    // the auto theme composes with a custom className
+    expect(autoRoot?.classList.contains('lbg-theme-auto')).toBe(true)
+    expect(autoRoot?.classList.contains('brand')).toBe(true)
+    auto.destroy()
+  })
+
   it('shows counter and caption for the current item', () => {
     const lb = new Lightbox({ items })
     lb.open(0)

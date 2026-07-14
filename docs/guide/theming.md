@@ -2,12 +2,37 @@
 
 The UI is styled entirely with CSS custom properties on the `.lbg-root` element, so you can theme it globally or per-instance without fighting specificity.
 
-## Built-in themes
+## Dark & light mode
 
-Pass a preset class via `className`:
+The lightbox is **dark by default**. Use the `theme` option to switch:
 
 ```ts
-new Lightbox({ items, className: 'lbg-theme-light' })   // light UI
+new Lightbox({ items })                  // dark (default)
+new Lightbox({ items, theme: 'light' })  // light UI
+new Lightbox({ items, theme: 'auto' })   // follow the OS (prefers-color-scheme)
+```
+
+- **`'auto'`** stays dark and switches to light only when the operating system
+  reports a light colour scheme — no JavaScript or listeners needed.
+- If your app has its own light/dark toggle, drive it directly:
+
+  ```ts
+  new Lightbox({ items, theme: siteIsDark ? 'dark' : 'light' })
+  ```
+
+The option is applied as a `lbg-theme-*` class, so it composes with both
+`className` and the CSS-custom-property overrides below.
+
+The same option works through every framework binding — for example
+`<Lightbox items={items} theme="auto" />` (React/Solid),
+`:options="{ theme: 'auto' }"` (Vue), `createLightbox(items, { theme: 'auto' })`
+(Svelte), or `el.options = { theme: 'auto' }` (Web Component).
+
+## More built-in presets
+
+Layer these on via `className` (they stack with `theme`):
+
+```ts
 new Lightbox({ items, className: 'lbg-theme-glass' })   // frosted blur backdrop
 new Lightbox({ items, className: 'lbg-theme-minimal' }) // transparent toolbar
 ```

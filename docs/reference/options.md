@@ -12,6 +12,7 @@ Passed to `new Lightbox({ items, ...options })`, to `bindGallery(target, options
 | `preload` | `number` | `2` | Neighbouring images preloaded on each side. |
 | `animation` | `'zoom' \| 'fade' \| 'none'` | `'zoom'` | Opening animation. |
 | `animateFrom` | `(index) => HTMLElement \| null` | — | Origin element for the [FLIP animation](/guide/flip-animation). |
+| `theme` | `'dark' \| 'light' \| 'auto'` | `'dark'` | Colour scheme; `'auto'` follows `prefers-color-scheme`. See [theming](/guide/theming#dark-light-mode). |
 | `className` | `string` | — | Extra class on the root (for [theming](/guide/theming)). |
 | `container` | `HTMLElement` | `document.body` | Mount element. |
 

@@ -273,6 +273,7 @@ interface LightboxItem {
 | `rtl` | auto | Right-to-left mode (defaults to `document.dir`) |
 | `labels` | — | Override any UI string (i18n) |
 | `toolbarButtons` | — | Custom toolbar buttons `{ id, label, icon, onClick }` |
+| `theme` | `'dark'` | Colour scheme: `'dark' \| 'light' \| 'auto'` (`'auto'` follows the OS) |
 | `className` | — | Extra class on the root (theming) |
 | `container` | `document.body` | Mount element |
 
@@ -364,7 +365,13 @@ new Lightbox({
 
 ## Theming
 
-Built-in presets via `className`: `lbg-theme-light`, `lbg-theme-glass`, `lbg-theme-minimal` — or override the CSS custom properties:
+**Dark / light / system** — the lightbox is dark by default; switch with the `theme` option:
+
+```ts
+new Lightbox({ items, theme: 'light' }) // or 'dark' (default), or 'auto' to follow the OS
+```
+
+`'auto'` follows `prefers-color-scheme` with no extra wiring. Extra presets stack on via `className`: `lbg-theme-glass`, `lbg-theme-minimal` — or override the CSS custom properties:
 
 ```css
 .my-theme {

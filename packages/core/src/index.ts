@@ -12,6 +12,7 @@ export type {
   LightboxItemType,
   LightboxLabels,
   LightboxOptions,
+  LightboxTheme,
   LightboxToolbarButton,
 } from './types'
 

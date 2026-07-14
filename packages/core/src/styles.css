@@ -478,6 +478,26 @@ a.lbg-btn {
   background: linear-gradient(rgba(255, 255, 255, 0.5), transparent);
 }
 
+/* Auto theme: dark by default, light when the OS prefers a light scheme. */
+@media (prefers-color-scheme: light) {
+  .lbg-theme-auto {
+    --lbg-bg: rgba(248, 248, 250, 0.96);
+    --lbg-fg: #17171c;
+    --lbg-muted: rgba(0, 0, 0, 0.55);
+    --lbg-accent: #2f6fed;
+    --lbg-btn-bg: rgba(0, 0, 0, 0.06);
+    --lbg-btn-bg-hover: rgba(0, 0, 0, 0.14);
+  }
+
+  .lbg-theme-auto .lbg-toast {
+    background: rgba(20, 20, 26, 0.85);
+  }
+
+  .lbg-theme-auto .lbg-toolbar {
+    background: linear-gradient(rgba(255, 255, 255, 0.5), transparent);
+  }
+}
+
 .lbg-theme-glass {
   --lbg-bg: rgba(16, 16, 24, 0.55);
   --lbg-btn-bg: rgba(255, 255, 255, 0.12);

@@ -31,6 +31,15 @@ export interface LightboxItem {
 
 export type LightboxAnimation = 'zoom' | 'fade' | 'none'
 
+/**
+ * Colour scheme of the UI.
+ * - `'dark'` — the default dark overlay.
+ * - `'light'` — a light UI.
+ * - `'auto'` — follow the OS via `prefers-color-scheme` (dark by default,
+ *   switching to light when the system prefers light).
+ */
+export type LightboxTheme = 'dark' | 'light' | 'auto'
+
 /** All user-visible strings — override via the `labels` option for i18n. */
 export interface LightboxLabels {
   dialog: string
@@ -137,6 +146,12 @@ export interface LightboxOptions {
    * element (FLIP transition). `bindGallery` wires this automatically.
    */
   animateFrom?: (index: number) => HTMLElement | null | undefined
+  /**
+   * Colour scheme: `'dark'` (default), `'light'`, or `'auto'` to follow the
+   * OS `prefers-color-scheme`. Applied as a `lbg-theme-*` class, so it composes
+   * with `className` and CSS-custom-property overrides. @default 'dark'
+   */
+  theme?: LightboxTheme
   /** Right-to-left mode: swaps arrow-key direction and nav button sides. Defaults to `document.dir === 'rtl'`. */
   rtl?: boolean
   /** Override any user-visible string (i18n). */

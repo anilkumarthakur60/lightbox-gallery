@@ -75,6 +75,7 @@ const DEFAULTS = {
   closeOnBackdrop: true,
   preload: 2,
   animation: 'zoom' as const,
+  theme: 'dark' as const,
   className: '',
 }
 
@@ -469,6 +470,8 @@ export class Lightbox extends Emitter<LightboxEventMap> {
 
   private buildDOM(): void {
     const root = el('div', 'lbg-root')
+    if (this.options.theme === 'light') root.classList.add('lbg-theme-light')
+    else if (this.options.theme === 'auto') root.classList.add('lbg-theme-auto')
     if (this.options.className) root.classList.add(...this.options.className.split(/\s+/))
     if (this.options.animation !== 'none') root.classList.add(`lbg-anim-${this.options.animation}`)
     if (this.inline) root.classList.add('lbg-inline')
