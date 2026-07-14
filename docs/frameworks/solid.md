@@ -1,7 +1,7 @@
 # Solid
 
 ::: tip Live demo
-▶️ [Open the Solid demo](https://lightbox-gallery-three.vercel.app/solid/) — click a thumbnail to try zoom, swipe, slideshow, share and more.
+▶️ [Open the Solid demo](https://anil-labs-lightbox-gallery.vercel.app/solid/) — click a thumbnail to try zoom, swipe, slideshow, share and more.
 :::
 
 ```bash

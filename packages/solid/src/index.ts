@@ -38,7 +38,7 @@ export function Lightbox(props: LightboxProps): null {
       const { open: _o, index: _i, onClose: _c, onIndexChange: _oi, onZoom: _z, ...options } = props
       return options
     })
-    const lb = new CoreLightbox(config as LightboxOptions)
+    const lb = new CoreLightbox(config)
     core = lb
     lb.on('close', () => props.onClose?.())
     lb.on('change', (i) => props.onIndexChange?.(i))

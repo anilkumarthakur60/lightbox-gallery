@@ -15,7 +15,7 @@ A modern, **dependency-free** lightbox gallery for the web — zoom, pinch, swip
 - 📱 Touch-first: pinch-zoom, momentum pan, swipe-to-close
 - ♿ Accessible and SSR-safe by default
 
-> **[🚀 Live demos](https://lightbox-gallery-three.vercel.app)** &nbsp;·&nbsp; **[📖 Documentation](https://github.com/anilkumarthakur60/lightbox-gallery)**
+> **[🚀 Live demos](https://anil-labs-lightbox-gallery.vercel.app)** &nbsp;·&nbsp; **[📖 Documentation](https://github.com/anilkumarthakur60/lightbox-gallery)**
 
 ---
 

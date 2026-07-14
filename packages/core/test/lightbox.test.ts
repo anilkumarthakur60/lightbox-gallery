@@ -304,7 +304,7 @@ describe('tap handling', () => {
   it('tap on the backdrop closes the gallery', () => {
     const lb = new Lightbox({ items, loop: false })
     lb.open(0)
-    const inner = document.querySelectorAll('.lbg-slide-inner')[0]!
+    const inner = document.querySelectorAll('.lbg-slide-inner')[0]
     tap(inner, 'touch')
     vi.advanceTimersByTime(400)
     expect(lb.isOpen).toBe(false)

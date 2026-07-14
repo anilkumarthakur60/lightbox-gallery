@@ -23,11 +23,36 @@ const run = (cmd) => {
 }
 
 const demos = [
-  { slug: 'react', filter: 'example-react', label: 'React', desc: 'The <Lightbox> component with the useLightbox() hook.' },
-  { slug: 'vue', filter: 'example-vue', label: 'Vue 3', desc: 'The <Lightbox> component with v-model:open / v-model:index.' },
-  { slug: 'svelte', filter: 'example-svelte', label: 'Svelte', desc: 'The createLightbox() store controller, with reactive open/index.' },
-  { slug: 'solid', filter: 'example-solid', label: 'Solid', desc: 'The <Lightbox> component with useLightbox() signals.' },
-  { slug: 'element', filter: 'example-element', label: 'Web Component', desc: 'The <lightbox-gallery bind="a"> custom element — any framework or plain HTML.' },
+  {
+    slug: 'react',
+    filter: 'example-react',
+    label: 'React',
+    desc: 'The <Lightbox> component with the useLightbox() hook.',
+  },
+  {
+    slug: 'vue',
+    filter: 'example-vue',
+    label: 'Vue 3',
+    desc: 'The <Lightbox> component with v-model:open / v-model:index.',
+  },
+  {
+    slug: 'svelte',
+    filter: 'example-svelte',
+    label: 'Svelte',
+    desc: 'The createLightbox() store controller, with reactive open/index.',
+  },
+  {
+    slug: 'solid',
+    filter: 'example-solid',
+    label: 'Solid',
+    desc: 'The <Lightbox> component with useLightbox() signals.',
+  },
+  {
+    slug: 'element',
+    filter: 'example-element',
+    label: 'Web Component',
+    desc: 'The <lightbox-gallery bind="a"> custom element — any framework or plain HTML.',
+  },
 ]
 
 // 1. Build the workspace packages the examples depend on (core + wrappers).
@@ -95,6 +120,8 @@ const html = `<!doctype html>
       .cta { color: #7dabff; font-weight: 600; font-size: 14px; }
       footer { margin-top: 40px; text-align: center; color: #75757f; font-size: 13px; }
       footer code { background: rgba(255,255,255,0.07); padding: 2px 7px; border-radius: 6px; }
+      footer a { color: #7dabff; text-decoration: none; }
+      footer a:hover { text-decoration: underline; }
     </style>
   </head>
   <body>
@@ -106,7 +133,8 @@ const html = `<!doctype html>
       <div class="grid">${cards}
       </div>
       <footer>
-        Also ships <code>@anil-labs/lightbox-gallery-svelte</code>, <code>/solid</code> and a <code>&lt;lightbox-gallery&gt;</code> web component.
+        Every demo runs the same zero-dependency <code>@anil-labs/lightbox-gallery-core</code> engine.
+        <a href="https://github.com/anilkumarthakur60/lightbox-gallery">View on GitHub</a>
       </footer>
     </main>
   </body>

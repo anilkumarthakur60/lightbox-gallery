@@ -203,7 +203,7 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     super()
     const { items, ...rest } = options
     this.items = items.slice()
-    this.options = { ...DEFAULTS, items: this.items, ...rest } as ResolvedOptions
+    this.options = { ...DEFAULTS, items: this.items, ...rest }
     this.labels = { ...DEFAULT_LABELS, ...this.options.labels }
   }
 
@@ -504,7 +504,12 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     this.slideshowBtn = button('lbg-slideshow', this.labels.slideshowStart, icons.play, buttons)
     this.slideshowBtn.addEventListener('click', () => this.toggleSlideshow())
 
-    this.rotateLeftBtn = button('lbg-rotate-left', this.labels.rotateLeft, icons.rotateLeft, buttons)
+    this.rotateLeftBtn = button(
+      'lbg-rotate-left',
+      this.labels.rotateLeft,
+      icons.rotateLeft,
+      buttons,
+    )
     this.rotateLeftBtn.addEventListener('click', () => this.rotateLeft())
     this.rotateRightBtn = button(
       'lbg-rotate-right',
@@ -893,9 +898,7 @@ export class Lightbox extends Emitter<LightboxEventMap> {
   private setTrackOffset(px: number, animate: boolean): void {
     this.track.classList.toggle('lbg-track-anim', animate)
     this.track.style.transform =
-      px === 0 && !animate
-        ? 'translate3d(-100%, 0, 0)'
-        : `translate3d(calc(-100% + ${px}px), 0, 0)`
+      px === 0 && !animate ? 'translate3d(-100%, 0, 0)' : `translate3d(calc(-100% + ${px}px), 0, 0)`
   }
 
   // ------------------------------------------------------------------- UI
@@ -1122,10 +1125,16 @@ export class Lightbox extends Emitter<LightboxEventMap> {
         else if (!this.inline) this.close()
         break
       case 'ArrowLeft':
-        if (this.options.keyboard) this.rtlActive ? this.next() : this.prev()
+        if (this.options.keyboard) {
+          if (this.rtlActive) this.next()
+          else this.prev()
+        }
         break
       case 'ArrowRight':
-        if (this.options.keyboard) this.rtlActive ? this.prev() : this.next()
+        if (this.options.keyboard) {
+          if (this.rtlActive) this.prev()
+          else this.next()
+        }
         break
       case '+':
       case '=':
@@ -1247,14 +1256,7 @@ export class Lightbox extends Emitter<LightboxEventMap> {
   private transformString(scale: number, tx: number, ty: number): string {
     const fx = this.flippedX ? -1 : 1
     const fy = this.flippedY ? -1 : 1
-    if (
-      scale === 1 &&
-      tx === 0 &&
-      ty === 0 &&
-      this.rotation % 360 === 0 &&
-      fx === 1 &&
-      fy === 1
-    ) {
+    if (scale === 1 && tx === 0 && ty === 0 && this.rotation % 360 === 0 && fx === 1 && fy === 1) {
       return ''
     }
     return `translate3d(${tx}px, ${ty}px, 0) scale(${scale}) rotate(${this.rotation}deg) scale(${fx}, ${fy})`
@@ -1413,11 +1415,7 @@ export class Lightbox extends Emitter<LightboxEventMap> {
       if (this.pointers.size < 2) {
         this.gesture = 'idle'
         this.pointers.clear()
-        if (
-          this.scaleValue < PINCH_CLOSE_SCALE &&
-          this.options.pinchToClose &&
-          !this.inline
-        ) {
+        if (this.scaleValue < PINCH_CLOSE_SCALE && this.options.pinchToClose && !this.inline) {
           this.close()
         } else if (this.scaleValue <= 1.04) {
           this.zoomAtPoint(1, null, true)

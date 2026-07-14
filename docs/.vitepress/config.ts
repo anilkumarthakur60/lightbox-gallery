@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 const REPO = 'https://github.com/anilkumarthakur60/lightbox-gallery'
-const DEMOS = 'https://lightbox-gallery-three.vercel.app'
+const DEMOS = 'https://anil-labs-lightbox-gallery.vercel.app'
 
 export default defineConfig({
   title: 'lightbox-gallery',
@@ -18,7 +18,8 @@ export default defineConfig({
       'meta',
       {
         property: 'og:description',
-        content: 'A modern, dependency-free lightbox with React, Vue, Svelte, Solid and Web Component bindings.',
+        content:
+          'A modern, dependency-free lightbox with React, Vue, Svelte, Solid and Web Component bindings.',
       },
     ],
   ],

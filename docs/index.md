@@ -11,7 +11,7 @@ hero:
       link: /guide/getting-started
     - theme: alt
       text: Live Demos
-      link: https://lightbox-gallery-three.vercel.app
+      link: https://anil-labs-lightbox-gallery.vercel.app
     - theme: alt
       text: View on GitHub
       link: https://github.com/anilkumarthakur60/lightbox-gallery

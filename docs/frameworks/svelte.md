@@ -1,7 +1,7 @@
 # Svelte
 
 ::: tip Live demo
-▶️ [Open the Svelte demo](https://lightbox-gallery-three.vercel.app/svelte/) — click a thumbnail to try zoom, swipe, slideshow, share and more.
+▶️ [Open the Svelte demo](https://anil-labs-lightbox-gallery.vercel.app/svelte/) — click a thumbnail to try zoom, swipe, slideshow, share and more.
 :::
 
 ```bash

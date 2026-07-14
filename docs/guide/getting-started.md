@@ -1,7 +1,7 @@
 # Getting Started
 
 ::: tip See it live
-▶️ [Live demos](https://lightbox-gallery-three.vercel.app) for React, Vue, Svelte, Solid and the Web Component.
+▶️ [Live demos](https://anil-labs-lightbox-gallery.vercel.app) for React, Vue, Svelte, Solid and the Web Component.
 :::
 
 ## Installation

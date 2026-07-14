@@ -5,9 +5,7 @@ export const icons = {
   close: svg('<path d="M18 6 6 18M6 6l12 12"/>'),
   prev: svg('<path d="M15 18l-6-6 6-6"/>'),
   next: svg('<path d="M9 18l6-6-6-6"/>'),
-  zoomIn: svg(
-    '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/>',
-  ),
+  zoomIn: svg('<circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/>'),
   zoomOut: svg('<circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35M8 11h6"/>'),
   expand: svg(
     '<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>',

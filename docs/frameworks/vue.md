@@ -1,7 +1,7 @@
 # Vue 3
 
 ::: tip Live demo
-▶️ [Open the Vue demo](https://lightbox-gallery-three.vercel.app/vue/) — click a thumbnail to try zoom, swipe, slideshow, share and more.
+▶️ [Open the Vue demo](https://anil-labs-lightbox-gallery.vercel.app/vue/) — click a thumbnail to try zoom, swipe, slideshow, share and more.
 :::
 
 ```bash
