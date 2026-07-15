@@ -1,6 +1,6 @@
 {
   "name": "@anil-labs/lightbox-gallery-solid",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "SolidJS bindings for @anil-labs/lightbox-gallery-core — a modern lightbox gallery with zoom, swipe, thumbnails, slideshow and video support.",
   "type": "module",
   "main": "./dist/index.cjs",
