@@ -1,6 +1,6 @@
 {
   "name": "@anil-labs/lightbox-gallery-core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Modern, dependency-free lightbox gallery: zoom & pinch, swipe, thumbnails, slideshow, fullscreen, captions, video, keyboard navigation and full a11y.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -27,8 +27,7 @@
     "dev": "tsup --watch",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "typecheck": "tsc --noEmit",
-    "prepack": "pnpm run build"
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [
     "lightbox",
