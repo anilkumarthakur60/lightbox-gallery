@@ -4,3 +4,6 @@ packages:
   - docs
 allowBuilds:
   esbuild: true
+minimumReleaseAgeExclude:
+  - '@vitejs/plugin-vue@6.0.8'
+  - svelte@5.56.5
