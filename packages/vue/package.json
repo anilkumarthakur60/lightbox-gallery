@@ -21,8 +21,7 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "test": "echo \"covered by @anil-labs/lightbox-gallery-core\"",
-    "typecheck": "tsc --noEmit",
-    "prepack": "pnpm run build"
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [
     "vue",

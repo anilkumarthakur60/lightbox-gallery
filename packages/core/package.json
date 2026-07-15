@@ -27,8 +27,7 @@
     "dev": "tsup --watch",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "typecheck": "tsc --noEmit",
-    "prepack": "pnpm run build"
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [
     "lightbox",
