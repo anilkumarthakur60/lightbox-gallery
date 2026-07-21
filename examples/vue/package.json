@@ -11,7 +11,7 @@
   "dependencies": {
     "@anil-labs/lightbox-gallery-core": "workspace:*",
     "@anil-labs/lightbox-gallery-vue": "workspace:*",
-    "vue": "^3.5.39"
+    "vue": "^3.5.40"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.8",
