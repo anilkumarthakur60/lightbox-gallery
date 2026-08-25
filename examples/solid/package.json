@@ -11,7 +11,7 @@
   "dependencies": {
     "@anil-labs/lightbox-gallery-core": "workspace:*",
     "@anil-labs/lightbox-gallery-solid": "workspace:*",
-    "solid-js": "^1.9.14"
+    "solid-js": "^1.9.15"
   },
   "devDependencies": {
     "typescript": "^5.7.2",
