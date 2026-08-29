@@ -16,7 +16,7 @@ export { Lightbox as CoreLightbox } from '@anil-labs/lightbox-gallery-core'
 export type LightboxComponentOptions = Omit<LightboxOptions, 'items' | 'startIndex'>
 
 /**
- * Controlled Vue 3 lightbox. Renders nothing in place — the gallery portals
+ * Controlled Vue 3 lightbox. Renders nothing in place  the gallery portals
  * itself to `document.body` via the core library.
  *
  * ```vue

@@ -4,7 +4,7 @@ layout: home
 hero:
   name: lightbox-gallery
   text: A modern lightbox for every framework
-  tagline: Zero-dependency, feature-loaded, and touch-first — with React, Vue, Svelte, Solid and Web Component bindings sharing one engine.
+  tagline: Zero-dependency, feature-loaded, and touch-first  with React, Vue, Svelte, Solid and Web Component bindings sharing one engine.
   actions:
     - theme: brand
       text: Get Started
@@ -28,7 +28,7 @@ features:
     details: The image expands from the clicked thumbnail on open and returns to it on close.
   - icon: 🎬
     title: Video & embeds
-    details: HTML5 video plus YouTube, Vimeo and Wistia auto-embeds — and a registry for your own providers.
+    details: HTML5 video plus YouTube, Vimeo and Wistia auto-embeds  and a registry for your own providers.
   - icon: ♾️
     title: Infinite galleries
     details: An end-reached event and appendItems() make dynamically-loaded, endless galleries trivial.

@@ -6,14 +6,14 @@ Passed to `new Lightbox({ items, ...options })`, to `bindGallery(target, options
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `LightboxItem[]` | — | The slides (**required**). |
+| `items` | `LightboxItem[]` |  | The slides (**required**). |
 | `startIndex` | `number` | `0` | Slide opened by default. |
 | `loop` | `boolean` | `true` | Wrap around at the ends. |
 | `preload` | `number` | `2` | Neighbouring images preloaded on each side. |
 | `animation` | `'zoom' \| 'fade' \| 'none'` | `'zoom'` | Opening animation. |
-| `animateFrom` | `(index) => HTMLElement \| null` | — | Origin element for the [FLIP animation](/guide/flip-animation). |
+| `animateFrom` | `(index) => HTMLElement \| null` |  | Origin element for the [FLIP animation](/guide/flip-animation). |
 | `theme` | `'dark' \| 'light' \| 'auto'` | `'dark'` | Colour scheme; `'auto'` follows `prefers-color-scheme`. See [theming](/guide/theming#dark-light-mode). |
-| `className` | `string` | — | Extra class on the root (for [theming](/guide/theming)). |
+| `className` | `string` |  | Extra class on the root (for [theming](/guide/theming)). |
 | `container` | `HTMLElement` | `document.body` | Mount element. |
 
 ## Zoom
@@ -48,7 +48,7 @@ Passed to `new Lightbox({ items, ...options })`, to `bindGallery(target, options
 | `download` | `boolean` | `false` | Download button. |
 | `share` | `boolean` | `false` | Share button (Web Share API / copy link). |
 | `rotate` | `boolean` | `false` | Rotate + flip buttons for images. |
-| `toolbarButtons` | `LightboxToolbarButton[]` | — | Custom toolbar buttons. |
+| `toolbarButtons` | `LightboxToolbarButton[]` |  | Custom toolbar buttons. |
 
 ## Slideshow
 
@@ -71,7 +71,7 @@ Passed to `new Lightbox({ items, ...options })`, to `bindGallery(target, options
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
 | `rtl` | `boolean` | auto | Right-to-left (defaults to `document.dir`). |
-| `labels` | `Partial<LightboxLabels>` | — | Override any UI string. See [i18n](/guide/i18n). |
+| `labels` | `Partial<LightboxLabels>` |  | Override any UI string. See [i18n](/guide/i18n). |
 
 ## Types
 

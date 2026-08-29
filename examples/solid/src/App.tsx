@@ -212,7 +212,7 @@ function ApiDemo() {
     core = lb
     lb.on('open', (i) => push('open', `#${i}`))
     lb.on('close', () => push('close'))
-    lb.on('change', (i, item) => push('change', `#${i} — ${item.caption ?? ''}`))
+    lb.on('change', (i, item) => push('change', `#${i}  ${item.caption ?? ''}`))
     lb.on('zoom', (s) => push('zoom', `${s.toFixed(2)}×`))
     lb.on('slideshow:start', () => push('slideshow:start'))
     lb.on('slideshow:stop', () => push('slideshow:stop'))
@@ -259,7 +259,7 @@ function ApiDemo() {
       </div>
       <div class="log">
         {log().length === 0 ? (
-          <div class="empty">Open the gallery or press a button — events appear here…</div>
+          <div class="empty">Open the gallery or press a button  events appear here…</div>
         ) : (
           <For each={log()}>
             {(e) => (
@@ -281,7 +281,7 @@ export default function App() {
         <span class="badge">Solid · useLightbox + &lt;Lightbox&gt;</span>
         <h1>lightbox-gallery</h1>
         <p class="tag">
-          Every feature, one page. Each card is a self-contained example — find the one that matches
+          Every feature, one page. Each card is a self-contained example  find the one that matches
           your use case.
         </p>
         <nav class="toc">
@@ -308,7 +308,7 @@ export default function App() {
         title="Mixed media"
         desc={
           <>
-            One gallery, many types — images, an MP4 video, a YouTube embed and a raw HTML slide
+            One gallery, many types  images, an MP4 video, a YouTube embed and a raw HTML slide
             (via <code>type</code>).
           </>
         }
@@ -345,7 +345,7 @@ export default function App() {
         desc={
           <>
             Opt into <code>fullscreen</code>, <code>download</code>, <code>share</code> and{' '}
-            <code>rotate</code> — plus your own via <code>toolbarButtons</code>.
+            <code>rotate</code>  plus your own via <code>toolbarButtons</code>.
           </>
         }
         use={
@@ -433,8 +433,8 @@ export default function App() {
         title="Programmatic API & live events"
         desc={
           <>
-            Drive the instance — <code>open</code>, <code>next</code>, <code>prev</code>,{' '}
-            <code>toggleSlideshow</code>, <code>toggleFullscreen</code> — and watch events fire.
+            Drive the instance  <code>open</code>, <code>next</code>, <code>prev</code>,{' '}
+            <code>toggleSlideshow</code>, <code>toggleFullscreen</code>  and watch events fire.
           </>
         }
         use={

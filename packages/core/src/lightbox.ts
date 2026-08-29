@@ -89,7 +89,7 @@ const PINCH_MIN_SCALE = 0.4
 const PINCH_CLOSE_SCALE = 0.75
 
 // 'none' = movement consumed but intentionally ignored (e.g. a sloppy mouse
-// click that drifted past the tap threshold) — must not become a tap on release
+// click that drifted past the tap threshold)  must not become a tap on release
 type Gesture = 'idle' | 'pending' | 'swipe' | 'pan' | 'vclose' | 'pinch' | 'none'
 
 interface TracePoint {
@@ -158,7 +158,7 @@ export class Lightbox extends Emitter<LightboxEventMap> {
   private gesture: Gesture = 'idle'
   private start = { x: 0, y: 0, tx: 0, ty: 0, scale: 1, dist: 0, midX: 0, midY: 0 }
   private trace: TracePoint[] = []
-  // original pointerdown target — pointerup retargets to the stage once
+  // original pointerdown target  pointerup retargets to the stage once
   // setPointerCapture is active, so it cannot be used for hit-testing
   private downTarget: HTMLElement | null = null
   private lastTap = { t: 0, x: 0, y: 0 }
@@ -365,7 +365,7 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     this.updateUI()
   }
 
-  /** Append items without re-rendering the current slide — for infinite galleries (see the `end-reached` event). */
+  /** Append items without re-rendering the current slide  for infinite galleries (see the `end-reached` event). */
   appendItems(items: LightboxItem[]): void {
     if (items.length === 0) return
     const nextSlotWasEmpty = this._isOpen && this.slides[2]?.childElementCount === 0
@@ -1439,7 +1439,7 @@ export class Lightbox extends Emitter<LightboxEventMap> {
       const rect = this.stage.getBoundingClientRect()
       const threshold = Math.min(rect.width * 0.22, 140)
       const dir: 1 | -1 = dx < 0 ? 1 : -1
-      // a flick counts only with real displacement behind it — raw velocity
+      // a flick counts only with real displacement behind it  raw velocity
       // alone can spike on a few-pixel jitter
       const flick = Math.abs(vx) > 0.45 && Math.abs(dx) > 30
       if ((Math.abs(dx) > threshold || flick) && this.canGo(dir)) {
@@ -1489,7 +1489,7 @@ export class Lightbox extends Emitter<LightboxEventMap> {
     if (raw >= 1) {
       next = clamp(raw, 1, this.options.maxZoom)
     } else if (allowBelow) {
-      // rubber-band below 1x — releasing under PINCH_CLOSE_SCALE closes
+      // rubber-band below 1x  releasing under PINCH_CLOSE_SCALE closes
       next = Math.max(PINCH_MIN_SCALE, 1 - (1 - raw) * 0.85)
     } else {
       next = 1

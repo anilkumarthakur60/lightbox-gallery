@@ -9,10 +9,10 @@
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT" /></a>
 </p>
 
-A modern, **dependency-free** lightbox gallery for the web — zoom, pinch, swipe, thumbnails, slideshow, video and full accessibility — with first-class bindings for **React**, **Vue 3**, **Svelte**, **Solid** and a framework-agnostic **Web Component**.
+A modern, **dependency-free** lightbox gallery for the web  zoom, pinch, swipe, thumbnails, slideshow, video and full accessibility  with first-class bindings for **React**, **Vue 3**, **Svelte**, **Solid** and a framework-agnostic **Web Component**.
 
 - 🪶 **Zero dependencies**, ~10 kB min+gzip core
-- 🧩 One engine, six packages — pick your framework, share one API
+- 🧩 One engine, six packages  pick your framework, share one API
 - 📱 Touch-first: pinch-zoom, momentum pan, swipe-to-close
 - ♿ Accessible and SSR-safe by default
 
@@ -46,24 +46,24 @@ A modern, **dependency-free** lightbox gallery for the web — zoom, pinch, swip
 | [`@anil-labs/lightbox-gallery-vue`](packages/vue) | `<Lightbox>` component (`v-model`), `useLightbox` composable, plugin. | tiny wrapper |
 | [`@anil-labs/lightbox-gallery-svelte`](packages/svelte) | `createLightbox` store controller + `use:lightbox` action. | tiny wrapper |
 | [`@anil-labs/lightbox-gallery-solid`](packages/solid) | `<Lightbox>` component + `useLightbox` signals. | tiny wrapper |
-| [`@anil-labs/lightbox-gallery-element`](packages/element) | `<lightbox-gallery>` custom element — any framework, or a plain `<script>` tag. | self-contained |
+| [`@anil-labs/lightbox-gallery-element`](packages/element) | `<lightbox-gallery>` custom element  any framework, or a plain `<script>` tag. | self-contained |
 
 ## Features
 
-- 🔍 **Zoom** — mouse wheel / trackpad, pinch, double-tap / double-click, toolbar buttons; anchored zoom with pan clamping and **momentum panning**
-- 👆 **Gestures** — swipe to navigate with velocity snapping, drag to pan, swipe up/down to close, **pinch-to-close**
-- ✨ **FLIP animation** — the image expands from the clicked thumbnail on open and returns to it on close (`animateFrom`; automatic with `bindGallery`)
-- 🔗 **Hash routing** — shareable per-slide URLs (`#gallery=3`), browser back button closes the lightbox, deep-linking on load
+- 🔍 **Zoom**  mouse wheel / trackpad, pinch, double-tap / double-click, toolbar buttons; anchored zoom with pan clamping and **momentum panning**
+- 👆 **Gestures**  swipe to navigate with velocity snapping, drag to pan, swipe up/down to close, **pinch-to-close**
+- ✨ **FLIP animation**  the image expands from the clicked thumbnail on open and returns to it on close (`animateFrom`; automatic with `bindGallery`)
+- 🔗 **Hash routing**  shareable per-slide URLs (`#gallery=3`), browser back button closes the lightbox, deep-linking on load
 - 🖼 **Thumbnail strip** with active tracking and auto-scroll
-- ▶️ **Slideshow** — configurable delay, progress bar, pause-on-hover, waits for videos to finish before advancing
-- 🔄 **Rotate & flip** — rotate left/right, flip horizontal/vertical
-- 📤 **Share** — Web Share API with copy-link fallback
+- ▶️ **Slideshow**  configurable delay, progress bar, pause-on-hover, waits for videos to finish before advancing
+- 🔄 **Rotate & flip**  rotate left/right, flip horizontal/vertical
+- 📤 **Share**  Web Share API with copy-link fallback
 - ⛶ **Fullscreen**, 🎬 **video & embeds** (HTML5, YouTube / Vimeo / Wistia auto-embed + custom provider registry), 📝 **captions**, arbitrary HTML slides
-- ♾️ **Infinite galleries** — `end-reached` event + `appendItems()` for dynamic loading
-- 🧩 **Inline mode** — render as an embedded carousel inside any container instead of a fullscreen overlay
-- ⌨️ **Keyboard** — arrows, `Escape`, `+` / `-` / `0` zoom, `f` fullscreen
-- ♿ **Accessible** — `role="dialog"`, focus trap, focus restore, ARIA labels, `prefers-reduced-motion`; **i18n** via the `labels` option; **RTL** support
-- 🎨 **Themeable** — CSS custom properties + built-in presets (`lbg-theme-light`, `lbg-theme-glass`, `lbg-theme-minimal`); custom toolbar buttons
+- ♾️ **Infinite galleries**  `end-reached` event + `appendItems()` for dynamic loading
+- 🧩 **Inline mode**  render as an embedded carousel inside any container instead of a fullscreen overlay
+- ⌨️ **Keyboard**  arrows, `Escape`, `+` / `-` / `0` zoom, `f` fullscreen
+- ♿ **Accessible**  `role="dialog"`, focus trap, focus restore, ARIA labels, `prefers-reduced-motion`; **i18n** via the `labels` option; **RTL** support
+- 🎨 **Themeable**  CSS custom properties + built-in presets (`lbg-theme-light`, `lbg-theme-glass`, `lbg-theme-minimal`); custom toolbar buttons
 - 📱 Responsive and touch-first; `srcset` / `sizes`; neighbour preloading; SSR-safe (no DOM access until opened)
 - 📦 ESM + CJS + IIFE (CDN) builds with full TypeScript types; zero dependencies
 
@@ -79,7 +79,7 @@ pnpm add @anil-labs/lightbox-gallery-core
 import { Lightbox, bindGallery } from '@anil-labs/lightbox-gallery-core'
 import '@anil-labs/lightbox-gallery-core/styles.css'
 
-// Option A — programmatic
+// Option A  programmatic
 const lightbox = new Lightbox({
   items: [
     { src: '/photos/1.jpg', caption: 'Sunrise' },
@@ -90,7 +90,7 @@ const lightbox = new Lightbox({
 })
 lightbox.open(0)
 
-// Option B — progressive enhancement from links
+// Option B  progressive enhancement from links
 // (automatic FLIP thumbnail animation + hash deep-linking)
 // <a href="large.jpg" data-gallery data-caption="Sunrise"><img src="thumb.jpg"></a>
 bindGallery('a[data-gallery]', { loop: true, hash: true, share: true })
@@ -269,12 +269,12 @@ interface LightboxItem {
 | `closeOnBackdrop` | `true` | Click outside the media closes |
 | `preload` | `2` | Neighbouring images preloaded per side |
 | `animation` | `'zoom'` | Open animation: `'zoom' \| 'fade' \| 'none'` |
-| `animateFrom` | — | `(index) => HTMLElement` for the FLIP thumbnail transition |
+| `animateFrom` |  | `(index) => HTMLElement` for the FLIP thumbnail transition |
 | `rtl` | auto | Right-to-left mode (defaults to `document.dir`) |
-| `labels` | — | Override any UI string (i18n) |
-| `toolbarButtons` | — | Custom toolbar buttons `{ id, label, icon, onClick }` |
+| `labels` |  | Override any UI string (i18n) |
+| `toolbarButtons` |  | Custom toolbar buttons `{ id, label, icon, onClick }` |
 | `theme` | `'dark'` | Colour scheme: `'dark' \| 'light' \| 'auto'` (`'auto'` follows the OS) |
-| `className` | — | Extra class on the root (theming) |
+| `className` |  | Extra class on the root (theming) |
 | `container` | `document.body` | Mount element |
 
 ## Instance API
@@ -305,15 +305,15 @@ off() // unsubscribe
 | Event | Payload |
 | --- | --- |
 | `open` | `(index)` |
-| `close` | — |
+| `close` |  |
 | `change` | `(index, item)` |
 | `zoom` | `(scale)` |
 | `rotate` | `(degrees)` |
 | `flip` | `(horizontal, vertical)` |
 | `share` | `(item, index)` |
-| `end-reached` | — (within one slide of the end) |
-| `slideshow:start` / `slideshow:stop` | — |
-| `fullscreen:enter` / `fullscreen:exit` | — |
+| `end-reached` |  (within one slide of the end) |
+| `slideshow:start` / `slideshow:stop` |  |
+| `fullscreen:enter` / `fullscreen:exit` |  |
 | `error` | `(item, index)` |
 
 ## Recipes
@@ -365,13 +365,13 @@ new Lightbox({
 
 ## Theming
 
-**Dark / light / system** — the lightbox is dark by default; switch with the `theme` option:
+**Dark / light / system**  the lightbox is dark by default; switch with the `theme` option:
 
 ```ts
 new Lightbox({ items, theme: 'light' }) // or 'dark' (default), or 'auto' to follow the OS
 ```
 
-`'auto'` follows `prefers-color-scheme` with no extra wiring. Extra presets stack on via `className`: `lbg-theme-glass`, `lbg-theme-minimal` — or override the CSS custom properties:
+`'auto'` follows `prefers-color-scheme` with no extra wiring. Extra presets stack on via `className`: `lbg-theme-glass`, `lbg-theme-minimal`  or override the CSS custom properties:
 
 ```css
 .my-theme {

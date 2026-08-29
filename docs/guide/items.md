@@ -1,6 +1,6 @@
 # Items
 
-Each slide is a `LightboxItem`. Only `src` is required — everything else is optional and the media type is auto-detected.
+Each slide is a `LightboxItem`. Only `src` is required  everything else is optional and the media type is auto-detected.
 
 ```ts
 interface LightboxItem {

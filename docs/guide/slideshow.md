@@ -15,7 +15,7 @@ new Lightbox({
 ## Behaviour
 
 - Press the play button (or call `startSlideshow()`) to begin. A progress bar across the top fills over `slideshowDelay`, then the gallery advances.
-- **Video slides play through.** When the current slide is a video, the timer is skipped — the video plays and the slideshow advances when it ends.
+- **Video slides play through.** When the current slide is a video, the timer is skipped  the video plays and the slideshow advances when it ends.
 - **Hover pauses.** With `slideshowPauseOnHover`, moving the mouse over the media freezes the progress bar; leaving resumes it.
 - At the end (with `loop: false`) the slideshow stops automatically.
 - Any manual navigation (arrow, swipe, thumbnail click) stops the slideshow.

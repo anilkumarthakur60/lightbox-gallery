@@ -1,6 +1,6 @@
 # @anil-labs/lightbox-gallery-element
 
-`<lightbox-gallery>` Web Component for [`@anil-labs/lightbox-gallery-core`](https://www.npmjs.com/package/@anil-labs/lightbox-gallery-core) — use the lightbox in any framework or plain HTML. Styles are injected automatically.
+`<lightbox-gallery>` Web Component for [`@anil-labs/lightbox-gallery-core`](https://www.npmjs.com/package/@anil-labs/lightbox-gallery-core)  use the lightbox in any framework or plain HTML. Styles are injected automatically.
 
 ## Script tag (no build step)
 

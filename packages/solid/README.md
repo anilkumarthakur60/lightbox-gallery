@@ -1,6 +1,6 @@
 # @anil-labs/lightbox-gallery-solid
 
-SolidJS bindings for [`@anil-labs/lightbox-gallery-core`](https://www.npmjs.com/package/@anil-labs/lightbox-gallery-core) — a modern lightbox gallery with zoom, swipe, thumbnails, slideshow, fullscreen and video support.
+SolidJS bindings for [`@anil-labs/lightbox-gallery-core`](https://www.npmjs.com/package/@anil-labs/lightbox-gallery-core)  a modern lightbox gallery with zoom, swipe, thumbnails, slideshow, fullscreen and video support.
 
 ```bash
 pnpm add @anil-labs/lightbox-gallery-solid @anil-labs/lightbox-gallery-core

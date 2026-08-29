@@ -48,11 +48,11 @@ const lightbox = new Lightbox({
 document.querySelector('#open')!.addEventListener('click', () => lightbox.open(0))
 ```
 
-That's it — you get zoom, swipe, thumbnails, keyboard navigation and a slideshow out of the box.
+That's it  you get zoom, swipe, thumbnails, keyboard navigation and a slideshow out of the box.
 
 ## Progressive enhancement
 
-If your page already renders thumbnail links, `bindGallery` turns them into a gallery — and automatically wires the FLIP open/close animation to the clicked thumbnail.
+If your page already renders thumbnail links, `bindGallery` turns them into a gallery  and automatically wires the FLIP open/close animation to the clicked thumbnail.
 
 ```html
 <a href="large-1.jpg" data-gallery data-caption="Sunrise"><img src="thumb-1.jpg" alt="Sunrise" /></a>
@@ -93,6 +93,6 @@ import type { LightboxItem, LightboxOptions } from '@anil-labs/lightbox-gallery-
 
 ## Next steps
 
-- [Items](./items) — how each slide is described
-- [Options](/reference/options) — configure behaviour
+- [Items](./items)  how each slide is described
+- [Options](/reference/options)  configure behaviour
 - Your framework: [React](/frameworks/react) · [Vue](/frameworks/vue) · [Svelte](/frameworks/svelte) · [Solid](/frameworks/solid) · [Web Component](/frameworks/web-component)

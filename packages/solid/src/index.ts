@@ -19,7 +19,7 @@ export interface LightboxProps extends Omit<LightboxOptions, 'startIndex'> {
 }
 
 /**
- * Controlled Solid lightbox. Renders nothing in place — the gallery portals
+ * Controlled Solid lightbox. Renders nothing in place  the gallery portals
  * itself to `document.body` via the core library.
  *
  * ```tsx

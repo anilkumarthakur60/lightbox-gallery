@@ -13,7 +13,7 @@ new Lightbox({ items, theme: 'auto' })   // follow the OS (prefers-color-scheme)
 ```
 
 - **`'auto'`** stays dark and switches to light only when the operating system
-  reports a light colour scheme — no JavaScript or listeners needed.
+  reports a light colour scheme  no JavaScript or listeners needed.
 - If your app has its own light/dark toggle, drive it directly:
 
   ```ts
@@ -23,7 +23,7 @@ new Lightbox({ items, theme: 'auto' })   // follow the OS (prefers-color-scheme)
 The option is applied as a `lbg-theme-*` class, so it composes with both
 `className` and the CSS-custom-property overrides below.
 
-The same option works through every framework binding — for example
+The same option works through every framework binding  for example
 `<Lightbox items={items} theme="auto" />` (React/Solid),
 `:options="{ theme: 'auto' }"` (Vue), `createLightbox(items, { theme: 'auto' })`
 (Svelte), or `el.options = { theme: 'auto' }` (Web Component).
@@ -39,7 +39,7 @@ new Lightbox({ items, className: 'lbg-theme-minimal' }) // transparent toolbar
 
 ## Custom properties
 
-Override any of these — globally on `.lbg-root`, or scoped to your own class:
+Override any of these  globally on `.lbg-root`, or scoped to your own class:
 
 | Variable | Default | Purpose |
 | --- | --- | --- |

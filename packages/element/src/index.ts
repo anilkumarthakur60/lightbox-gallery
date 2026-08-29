@@ -18,7 +18,7 @@ function injectStyles(): void {
 /**
  * `<lightbox-gallery>` custom element.
  *
- * Progressive enhancement — wrap your links and set `bind`:
+ * Progressive enhancement  wrap your links and set `bind`:
  * ```html
  * <lightbox-gallery bind="a">
  *   <a href="large-1.jpg"><img src="thumb-1.jpg" alt="" /></a>
@@ -26,7 +26,7 @@ function injectStyles(): void {
  * </lightbox-gallery>
  * ```
  *
- * Or programmatic — assign `items` (and optionally `options`), then call
+ * Or programmatic  assign `items` (and optionally `options`), then call
  * `open(index)` / set the `open` attribute:
  * ```js
  * const el = document.querySelector('lightbox-gallery')

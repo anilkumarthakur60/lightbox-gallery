@@ -9,7 +9,7 @@ export default defineConfig({
   base: process.env.DOCS_BASE ?? '/',
   title: 'lightbox-gallery',
   description:
-    'A modern, dependency-free lightbox gallery with zoom, swipe, thumbnails, slideshow, video and full a11y — for React, Vue, Svelte, Solid and Web Components.',
+    'A modern, dependency-free lightbox gallery with zoom, swipe, thumbnails, slideshow, video and full a11y  for React, Vue, Svelte, Solid and Web Components.',
   lang: 'en-US',
   cleanUrls: true,
   lastUpdated: true,

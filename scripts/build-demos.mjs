@@ -51,7 +51,7 @@ const demos = [
     slug: 'element',
     filter: 'example-element',
     label: 'Web Component',
-    desc: 'The <lightbox-gallery bind="a"> custom element — any framework or plain HTML.',
+    desc: 'The <lightbox-gallery bind="a"> custom element  any framework or plain HTML.',
   },
 ]
 
@@ -83,7 +83,7 @@ const html = `<!doctype html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>lightbox-gallery — live demos</title>
+    <title>lightbox-gallery  live demos</title>
     <meta name="description" content="Live demos of lightbox-gallery: a modern, dependency-free lightbox with React, Vue, Svelte, Solid and Web Component bindings." />
     <style>
       :root { color-scheme: dark; }

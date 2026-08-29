@@ -33,14 +33,14 @@ export type LightboxAnimation = 'zoom' | 'fade' | 'none'
 
 /**
  * Colour scheme of the UI.
- * - `'dark'` — the default dark overlay.
- * - `'light'` — a light UI.
- * - `'auto'` — follow the OS via `prefers-color-scheme` (dark by default,
+ * - `'dark'`  the default dark overlay.
+ * - `'light'`  a light UI.
+ * - `'auto'`  follow the OS via `prefers-color-scheme` (dark by default,
  *   switching to light when the system prefers light).
  */
 export type LightboxTheme = 'dark' | 'light' | 'auto'
 
-/** All user-visible strings — override via the `labels` option for i18n. */
+/** All user-visible strings  override via the `labels` option for i18n. */
 export interface LightboxLabels {
   dialog: string
   close: string
@@ -64,7 +64,7 @@ export interface LightboxLabels {
 }
 
 export interface LightboxToolbarButton {
-  /** Unique id — added to the button class as `lbg-btn-<id>`. */
+  /** Unique id  added to the button class as `lbg-btn-<id>`. */
   id: string
   /** Accessible label / tooltip. */
   label: string
@@ -90,7 +90,7 @@ export interface LightboxOptions {
   wheelZoom?: boolean
   /** Navigate with horizontal swipe / drag. @default true */
   swipe?: boolean
-  /** Swipe down (or up) to close — touch/pen input only. @default true */
+  /** Swipe down (or up) to close  touch/pen input only. @default true */
   swipeToClose?: boolean
   /** Pinch inward below 1x to close (touch). @default true */
   pinchToClose?: boolean
@@ -172,7 +172,7 @@ export type LightboxEventMap = {
   rotate: [degrees: number]
   flip: [horizontal: boolean, vertical: boolean]
   share: [item: LightboxItem, index: number]
-  /** Fired when navigation gets within one slide of the end — use with `appendItems` for infinite galleries. */
+  /** Fired when navigation gets within one slide of the end  use with `appendItems` for infinite galleries. */
   'end-reached': []
   'slideshow:start': []
   'slideshow:stop': []

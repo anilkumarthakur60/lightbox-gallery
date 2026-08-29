@@ -1,10 +1,10 @@
 # Vanilla / CDN
 
 ::: tip Live demos
-▶️ [Browse all live demos](https://anil-labs-lightbox-gallery.vercel.app) — React, Vue, Svelte, Solid and the Web Component, all running the same core engine.
+▶️ [Browse all live demos](https://anil-labs-lightbox-gallery.vercel.app)  React, Vue, Svelte, Solid and the Web Component, all running the same core engine.
 :::
 
-The core package works anywhere — no framework required.
+The core package works anywhere  no framework required.
 
 ```bash
 pnpm add @anil-labs/lightbox-gallery-core

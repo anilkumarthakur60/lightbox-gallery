@@ -90,10 +90,10 @@ const linkMarkup = (items: LightboxItem[]): string =>
     )
     .join('')
 
-// 1 · Basic — literal <a> links already in the HTML; just pass options.
+// 1 · Basic  literal <a> links already in the HTML; just pass options.
 gel('lb-basic').options = { loop: true }
 
-// 4 · Toolbar — fill the element's links, then set options (before it binds on rAF).
+// 4 · Toolbar  fill the element's links, then set options (before it binds on rAF).
 const lbToolbar = gel('lb-toolbar')
 lbToolbar.innerHTML = linkMarkup(PHOTOS.slice(0, 6))
 lbToolbar.options = {
@@ -161,12 +161,12 @@ const logLine = (kind: string, detail = ''): void => {
   log.prepend(row)
   while (log.childElementCount > 40) log.lastElementChild?.remove()
 }
-log.innerHTML = '<div class="empty">Open the gallery or press a button — events appear here…</div>'
+log.innerHTML = '<div class="empty">Open the gallery or press a button  events appear here…</div>'
 
 const api = gallery($('g-api'), PHOTOS, { slideshow: true, fullscreen: true })
 api.on('open', (i) => logLine('open', `#${i}`))
 api.on('close', () => logLine('close'))
-api.on('change', (i, item) => logLine('change', `#${i} — ${item.caption ?? ''}`))
+api.on('change', (i, item) => logLine('change', `#${i}  ${item.caption ?? ''}`))
 api.on('zoom', (scale) => logLine('zoom', `${scale.toFixed(2)}×`))
 api.on('slideshow:start', () => logLine('slideshow:start'))
 api.on('slideshow:stop', () => logLine('slideshow:stop'))

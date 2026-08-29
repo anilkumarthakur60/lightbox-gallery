@@ -1,7 +1,7 @@
 # React
 
 ::: tip Live demo
-▶️ [Open the React demo](https://anil-labs-lightbox-gallery.vercel.app/react/) — click a thumbnail to try zoom, swipe, slideshow, share and more.
+▶️ [Open the React demo](https://anil-labs-lightbox-gallery.vercel.app/react/)  click a thumbnail to try zoom, swipe, slideshow, share and more.
 :::
 
 ```bash
@@ -69,7 +69,7 @@ function Gallery() {
 }
 ```
 
-`<Lightbox>` renders nothing in place — the gallery portals itself to `document.body` via the core engine. All [options](/reference/options) are accepted as props.
+`<Lightbox>` renders nothing in place  the gallery portals itself to `document.body` via the core engine. All [options](/reference/options) are accepted as props.
 
 ## FLIP thumbnail animation
 

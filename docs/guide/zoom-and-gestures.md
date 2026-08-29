@@ -23,7 +23,7 @@ new Lightbox({
 })
 ```
 
-When zoomed in, drag to pan. Releasing a drag applies **momentum** (inertia), clamped at the image edges — disable with `momentum: false`.
+When zoomed in, drag to pan. Releasing a drag applies **momentum** (inertia), clamped at the image edges  disable with `momentum: false`.
 
 Programmatic control:
 
@@ -41,11 +41,11 @@ lightbox.on('zoom', (scale) => console.log('now at', scale))
 
 ## Closing gestures
 
-- **Swipe up/down** (touch/pen) to dismiss — the slide follows your finger and the backdrop fades (`swipeToClose`).
+- **Swipe up/down** (touch/pen) to dismiss  the slide follows your finger and the backdrop fades (`swipeToClose`).
 - **Pinch inward** below 1× to close (`pinchToClose`).
 
 ::: tip Mouse vs touch
-Drag-to-close and swipe-to-close are **touch/pen only**. A mouse drag never closes the gallery — mouse users close with the backdrop, the ✕ button, or `Escape` — so an imperfect click can't dismiss it by accident.
+Drag-to-close and swipe-to-close are **touch/pen only**. A mouse drag never closes the gallery  mouse users close with the backdrop, the ✕ button, or `Escape`  so an imperfect click can't dismiss it by accident.
 :::
 
 ## Rotate & flip

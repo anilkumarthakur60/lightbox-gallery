@@ -80,7 +80,7 @@ const gallery = (
   return lb
 }
 
-// 1 · Basic — progressive enhancement from <a> links via bindGallery
+// 1 · Basic  progressive enhancement from <a> links via bindGallery
 const basicGrid = $('g-basic')
 basicGrid.innerHTML = PHOTOS.map(
   (p) =>
@@ -151,12 +151,12 @@ const logLine = (kind: string, detail = ''): void => {
   log.prepend(row)
   while (log.childElementCount > 40) log.lastElementChild?.remove()
 }
-log.innerHTML = '<div class="empty">Open the gallery or press a button — events appear here…</div>'
+log.innerHTML = '<div class="empty">Open the gallery or press a button  events appear here…</div>'
 
 const api = gallery($('g-api'), PHOTOS, { slideshow: true, fullscreen: true })
 api.on('open', (i) => logLine('open', `#${i}`))
 api.on('close', () => logLine('close'))
-api.on('change', (i, item) => logLine('change', `#${i} — ${item.caption ?? ''}`))
+api.on('change', (i, item) => logLine('change', `#${i}  ${item.caption ?? ''}`))
 api.on('zoom', (scale) => logLine('zoom', `${scale.toFixed(2)}×`))
 api.on('slideshow:start', () => logLine('slideshow:start'))
 api.on('slideshow:stop', () => logLine('slideshow:stop'))

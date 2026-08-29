@@ -115,7 +115,7 @@
     })
     api.on('open', (i) => push('open', `#${i}`))
     api.on('close', () => push('close'))
-    api.on('change', (i, item) => push('change', `#${i} — ${item.caption ?? ''}`))
+    api.on('change', (i, item) => push('change', `#${i}  ${item.caption ?? ''}`))
     api.on('zoom', (s) => push('zoom', `${s.toFixed(2)}×`))
     api.on('slideshow:start', () => push('slideshow:start'))
     api.on('slideshow:stop', () => push('slideshow:stop'))
@@ -133,7 +133,7 @@
     <span class="badge">Svelte · createLightbox</span>
     <h1>lightbox-gallery</h1>
     <p class="tag">
-      Every feature, one page. Each card is a self-contained example — find the one that matches
+      Every feature, one page. Each card is a self-contained example  find the one that matches
       your use case.
     </p>
     <nav class="toc">
@@ -161,7 +161,7 @@
     <div class="section-head">
       <h2><span class="n">02</span> Mixed media</h2>
       <p class="desc">
-        One gallery, many types — images, an MP4 video, a YouTube embed and a raw HTML slide (via <code
+        One gallery, many types  images, an MP4 video, a YouTube embed and a raw HTML slide (via <code
           >type</code
         >).
       </p>
@@ -199,7 +199,7 @@
       <p class="desc">
         Opt into <code>fullscreen</code>, <code>download</code>, <code>share</code> and
         <code>rotate</code>
-        — plus your own via <code>toolbarButtons</code>.
+         plus your own via <code>toolbarButtons</code>.
       </p>
       <p class="use"><b>Use it for</b> asset libraries, downloadable galleries, admin tools.</p>
     </div>
@@ -278,8 +278,8 @@
     <div class="section-head">
       <h2><span class="n">08</span> Programmatic API &amp; live events</h2>
       <p class="desc">
-        Drive the instance — <code>open</code>, <code>next</code>, <code>prev</code>,
-        <code>toggleSlideshow</code>, <code>toggleFullscreen</code> — and watch events fire.
+        Drive the instance  <code>open</code>, <code>next</code>, <code>prev</code>,
+        <code>toggleSlideshow</code>, <code>toggleFullscreen</code>  and watch events fire.
       </p>
       <p class="use"><b>Use it for</b> custom controls, analytics, syncing state.</p>
     </div>
@@ -312,7 +312,7 @@
       </div>
       <div class="log">
         {#if log.length === 0}
-          <div class="empty">Open the gallery or press a button — events appear here…</div>
+          <div class="empty">Open the gallery or press a button  events appear here…</div>
         {:else}
           {#each log as e, i (i)}<div class="row"><span class="k">{e.k}</span> {e.d}</div>{/each}
         {/if}

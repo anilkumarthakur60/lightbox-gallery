@@ -7,7 +7,7 @@ The gallery renders four kinds of media: images, HTML5 video, iframe embeds (You
 ```ts
 {
   src: '/clips/demo.mp4',
-  type: 'video',      // optional — inferred from the extension
+  type: 'video',      // optional  inferred from the extension
   poster: '/clips/demo.jpg',
   caption: 'A local video',
 }
@@ -17,7 +17,7 @@ Videos get native controls, `playsInline`, and `preload="metadata"`. In a slides
 
 ## YouTube / Vimeo / Wistia
 
-Just pass the page URL — it's converted to a privacy-friendly embed automatically:
+Just pass the page URL  it's converted to a privacy-friendly embed automatically:
 
 ```ts
 { src: 'https://youtu.be/dQw4w9WgXcQ' }            // → youtube-nocookie embed

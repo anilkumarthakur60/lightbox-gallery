@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup'
 
 export default defineConfig([
-  // library build — core stays external, CSS is inlined as text.
+  // library build  core stays external, CSS is inlined as text.
   // NOTE: the external is a regex anchored to the bare package so it does not
   // also swallow the `@anil-labs/lightbox-gallery-core/styles.css` subpath, which must be
   // resolved and inlined by the `.css` text loader below.
@@ -18,7 +18,7 @@ export default defineConfig([
     noExternal: [/@anil-labs\/lightbox-gallery-core\/styles\.css$/],
     loader: { '.css': 'text' },
   },
-  // standalone CDN build — everything bundled
+  // standalone CDN build  everything bundled
   {
     entry: ['src/index.ts'],
     format: ['iife'],

@@ -1,7 +1,7 @@
 # Solid
 
 ::: tip Live demo
-▶️ [Open the Solid demo](https://anil-labs-lightbox-gallery.vercel.app/solid/) — click a thumbnail to try zoom, swipe, slideshow, share and more.
+▶️ [Open the Solid demo](https://anil-labs-lightbox-gallery.vercel.app/solid/)  click a thumbnail to try zoom, swipe, slideshow, share and more.
 :::
 
 ```bash
@@ -67,4 +67,4 @@ export function Gallery() {
 | `onZoom` | `(scale) => void` |
 | …all [options](/reference/options) | `loop`, `share`, `rotate`, … |
 
-It renders nothing in place — the gallery portals itself to `document.body`.
+It renders nothing in place  the gallery portals itself to `document.body`.

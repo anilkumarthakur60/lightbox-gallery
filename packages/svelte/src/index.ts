@@ -6,7 +6,7 @@ export type { LightboxItem, LightboxOptions } from '@anil-labs/lightbox-gallery-
 export { Lightbox as CoreLightbox, bindGallery } from '@anil-labs/lightbox-gallery-core'
 
 export interface LightboxController {
-  /** Reactive open state — `$lightbox.isOpen` friendly. */
+  /** Reactive open state  `$lightbox.isOpen` friendly. */
   isOpen: Readable<boolean>
   /** Reactive current slide index. */
   index: Readable<number>
@@ -85,7 +85,7 @@ export function createLightbox(
 }
 
 /**
- * Svelte action for progressive enhancement — bind every matching link
+ * Svelte action for progressive enhancement  bind every matching link
  * inside the node into a gallery:
  *
  * ```svelte

@@ -1,7 +1,7 @@
 # Vue 3
 
 ::: tip Live demo
-▶️ [Open the Vue demo](https://anil-labs-lightbox-gallery.vercel.app/vue/) — click a thumbnail to try zoom, swipe, slideshow, share and more.
+▶️ [Open the Vue demo](https://anil-labs-lightbox-gallery.vercel.app/vue/)  click a thumbnail to try zoom, swipe, slideshow, share and more.
 :::
 
 ```bash
@@ -72,4 +72,4 @@ createApp(App).use(LightboxPlugin).mount('#app')
 <LightboxGallery :items="items" v-model:open="isOpen" v-model:index="index" />
 ```
 
-The component renders nothing in place — it portals to `document.body` via the core engine.
+The component renders nothing in place  it portals to `document.body` via the core engine.

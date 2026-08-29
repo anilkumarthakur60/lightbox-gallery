@@ -1,10 +1,10 @@
 # Thumbnail (FLIP) Animation
 
-The signature open/close effect: the full image visibly grows out of the thumbnail you clicked, and shrinks back into it on close — a FLIP (First-Last-Invert-Play) transition.
+The signature open/close effect: the full image visibly grows out of the thumbnail you clicked, and shrinks back into it on close  a FLIP (First-Last-Invert-Play) transition.
 
 ## Automatic with `bindGallery`
 
-When you use progressive enhancement, it's wired for you — the clicked link/image is the origin:
+When you use progressive enhancement, it's wired for you  the clicked link/image is the origin:
 
 ```ts
 bindGallery('a[data-gallery]', { animation: 'zoom' })
@@ -36,4 +36,4 @@ useLightbox(items, {
 
 - Applies to **image** slides only, and only when `animation` is `'zoom'` or `'fade'` (not `'none'`).
 - If the image is zoomed, rotated or flipped when you close, the FLIP is skipped and it fades out instead.
-- Respects `prefers-reduced-motion` — animations collapse to instant.
+- Respects `prefers-reduced-motion`  animations collapse to instant.

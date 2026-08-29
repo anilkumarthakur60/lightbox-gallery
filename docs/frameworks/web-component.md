@@ -1,10 +1,10 @@
 # Web Component
 
 ::: tip Live demo
-▶️ [Open the Web Component demo](https://anil-labs-lightbox-gallery.vercel.app/element/) — click a thumbnail to try zoom, swipe, slideshow, share and more.
+▶️ [Open the Web Component demo](https://anil-labs-lightbox-gallery.vercel.app/element/)  click a thumbnail to try zoom, swipe, slideshow, share and more.
 :::
 
-`<lightbox-gallery>` is a custom element that works in any framework — or plain HTML with a `<script>` tag. Styles are injected automatically, so there's no separate CSS import.
+`<lightbox-gallery>` is a custom element that works in any framework  or plain HTML with a `<script>` tag. Styles are injected automatically, so there's no separate CSS import.
 
 ```bash
 pnpm add @anil-labs/lightbox-gallery-element
@@ -64,7 +64,7 @@ el.addEventListener('lbg-close', () => {})
 
 ## Using in frameworks
 
-Because it's a standard custom element, it works in Angular, Astro, Qwik, Lit, plain HTML — anywhere. In JSX you may need to type it as an intrinsic element; in Vue templates it "just works" (custom elements pass through).
+Because it's a standard custom element, it works in Angular, Astro, Qwik, Lit, plain HTML  anywhere. In JSX you may need to type it as an intrinsic element; in Vue templates it "just works" (custom elements pass through).
 
 ## Custom tag name
 

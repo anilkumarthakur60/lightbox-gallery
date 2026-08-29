@@ -1,6 +1,6 @@
 # Hash Routing
 
-Sync the open slide to the URL hash so galleries are deep-linkable and the browser back button closes the lightbox — the behaviour users expect on mobile.
+Sync the open slide to the URL hash so galleries are deep-linkable and the browser back button closes the lightbox  the behaviour users expect on mobile.
 
 ```ts
 new Lightbox({ items, hash: true })       // uses #gallery=<n>
